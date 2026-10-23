@@ -1,0 +1,11 @@
+# Video action adherence and unwanted speech — 2026-10-22
+
+Inspected the completed coffee job c47794010413414e94b5949638c87a3b. It captured the correct character and two references, but its brief coffee action was followed by much longer appearance/body-language instructions. That is a plausible source of the off-task movement; a reference-guided model does not guarantee action adherence. The native video/audio model generated speech despite the existing no-dialogue soundscape instruction. It was not Studio TTS or a saved-voice binding.
+
+Backend 49 emphasizes the original requested action separately from character/reference context and restates short actions at the end of the shot. Character context identifies appearance; body language is framed as the manner of performing the requested activity. Empty scene-state fields are omitted. Long prompts are not duplicated by the short-action emphasis.
+
+New submissions default to Silent output. The work form exposes Silent / Generated sound, with an explicit warning that generated sound can include invented speech. Silent output removes all generated audio through FFmpeg video-stream copy before the job is published or appended to a chain. Compressed video packet hashes remain identical in the regression test. The model still synthesizes audio internally; this setting is not a speed optimization. Existing segments retain their audio. Captured queued/paused jobs without the new setting keep legacy generated-audio behavior; resumes use their captured setting. Imported/copied recipes preserve the output mode.
+
+Post-processing failure preserves the worker file and marks the job failed rather than publishing a completed clip with unwanted audio. Existing output files and character definitions were not modified.
+
+Review: checked action/context capture with project context disabled, prepared prompt structure, reference numbering, default/invalid sound modes, output finalization before completion/publication, failure behavior, continuation joining and captured resume settings. Full 131 Python and 45 frontend tests passed; three targeted prompt/silent-output/failure checks passed again after final edits. Backend 49 and the served output-sound selector verified live. No new AI render was started. Coffee-action visual quality remains unvalidated until the next user render.

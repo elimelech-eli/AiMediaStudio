@@ -1,0 +1,21 @@
+name: Frontend tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  node-tests:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run Studio frontend tests
+        shell: pwsh
+        run: |
+          $tests = @(Get-ChildItem -LiteralPath freevideo-trial -File | Where-Object { $_.Name -match 'test.*\.(js|cjs)$' } | ForEach-Object { $_.FullName })
+          if (-not $tests.Count) { throw 'No frontend tests found' }
+          node --test @tests
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }

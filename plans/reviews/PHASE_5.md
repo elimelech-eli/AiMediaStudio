@@ -1,0 +1,13 @@
+# Phase 5 — app-wide branching/portability/recovery review
+
+Gate passed: 34 Python tests, 4 JavaScript regressions, plus real Electron tests for three layouts, project selector/context/library presence, independent workspace drafts and isolated empty project state. Disposable renderer-test projects were removed; user media remains untouched.
+
+Reviewed snapshots, branches, all storage operations, imports/exports, shared/project voice profiles, every HTTP media route, frontend async state, global GPU admission, compatibility jobs, cancellation and Windows filesystem behavior.
+
+Findings fixed: copies remap required-reference IDs; batch moves preserve stable IDs and reject external required dependents or snapshot/context retention; partial copies stay hidden and are journaled; cancellation retains originals; purge is journaled; recovery skips live operations. Portable exports carry their operation intent so recovery does not publish an unwanted branch. Snapshot chat is captured at snapshot time. Embedded voice profiles are verified and remapped; workspace profiles resolve before shared profiles. Branching from Free work creates a project type. Imported chat is preserved when present.
+
+Security review: archive entries reject traversal, absolute/drive paths, symlinks, duplicate normalized names and unsafe Windows device/trailing-dot names. Expanded archive size/count/disk-space limits are enforced. Assets require schema/ID consistency, hashes, dependency presence and allowed media extensions. In particular, HTML/script-bearing asset types cannot be served from imported projects. HTTP JSON bodies must be objects. Operation cancellation validates workspace ownership.
+
+Verified tests: branch remains readable after source project purge; export/import round trip; verified branch recovery after injected failure; dependency-closure copy; rejected archive escape/executable types; canceled copy preserves source; purge recovers after simulated catalog-commit crash. No render/model was interrupted. Original pre-migration data retained.
+
+Final cross-phase regression addendum: 44 Python and 5 UI tests plus native checks pass. Required input-role maps and project-owned voice profile copies are now remapped on transfer; tests verify same-voice reference availability after source deletion. Legacy reference aliases used by old recipes are ingested as project-owned assets. Full-chain transcript and history-flag reconciliation preserve segment/chain behavior after moves/purge. Upload staging prevents indexing partial files. Polling signatures avoid repeatedly recreating galleries, and context drafts retain edit revisions. These corrections were included in the final phase-6 app-wide review and deployment.

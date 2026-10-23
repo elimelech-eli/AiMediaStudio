@@ -1,0 +1,583 @@
+"""One small, torch-free report per request, including failed requests."""
+from decimal import Decimal, ROUND_HALF_UP
+import hashlib
+import json
+import math
+from pathlib import Path
+import statistics
+import sys
+import time
+
+from . import __version__
+from .monitoring import OtherPrograms, shared_gpu, thermal_slowdown, worker_gpu
+from .diagnostics import Redactor, is_link, read_bounded
+from .diagnostic_resources import kernel_receipt
+from .monitoring import save
+
+
+def number(value):
+    return value if type(value) in (int, float) and math.isfinite(value) and value >= 0 else None
+
+
+def mapping(value):
+    return value if isinstance(value, dict) else {}
+
+
+def encoder_sizes(actual_bytes, expected_bytes):
+    """GiB with enough precision to distinguish unequal byte counts."""
+    values = (Decimal(actual_bytes) / 2**30, Decimal(expected_bytes) / 2**30)
+    for places in range(1, 11):
+        unit = Decimal(10) ** -places
+        sizes = tuple(f'{value.quantize(unit, rounding=ROUND_HALF_UP):f}' for value in values)
+        if actual_bytes == expected_bytes or sizes[0] != sizes[1]:
+            return sizes
+    return sizes
+
+
+def code_identity():
+    package = Path(__file__).parent
+    names = ('generate.py', 'policy.py', 'runtime.py', 'attention.py', 'decode.py', 'worker.py',
+             'encode_worker.py', 'encoder_checkpoint.py', 'system.py')
+    if sys.platform == 'darwin':
+        names = ('macos_generate.py', 'macos_stages.py', 'macos_runtime.py', 'macos_encoder.py', 'macos_decode.py',
+                 'macos_vdn.py', 'backends/mps.py', 'backends/mps_weights.py', 'backends/mps_fp8.py',
+                 'backends/mps_linear.py', 'backends/mps_attention.py', 'backends/mps_nvfp4.py',
+                 'backends/mps_delta.py', 'backends/mps_features.py', 'backends/mps_qk.py',
+                 'backends/mps_mlx_attention.py', 'backends/mps_vae_encode.py', 'backends/mps_modulation.py',
+                 'macos_compute.py', 'macos_decode_tiles.py',
+                 'macos_encoder_attention.py', 'macos_encoder_linear.py',
+                 'macos_memory.py', 'macos_conditions.py', 'macos_process_memory.py',
+                 'attention.py', 'refine.py', 'reference_sampler.py', 'adaln.py', 'latent_upscale.py',
+                 'media_encoding.py', 'media_conditioning.py', 'encoder_checkpoint.py', 'system.py')
+    values = {}
+    for name in names:
+        try:
+            values[name] = hashlib.sha256((package / name).read_bytes()).hexdigest()
+        except OSError:
+            values[name] = None
+    return dict(version=__version__, files_sha256=values)
+
+
+def summarize(report, engine, encoding):
+    profile = mapping(report.get('profile'))
+    policy = mapping(profile.get('policy'))
+    cache_hit = any(mapping(report.get(k)).get(flag) is True for k, flag in
+                    (('input_cache', 'conditioning_hit'), ('tuning', 'conditioning_cache_hit'), ('encoding', 'cache_hit')))
+    preencoded = str(report.get('encoder_mode', '')).startswith('preencoded')
+    # An upscale carries its preview's encoding receipt; that time was spent
+    # by the preview request, not this one.
+    from_preview = mapping(encoding).get('reused_from_preview') is True
+    sampling_reused = engine.get('sampling_reused') is True
+    stages = []
+    # Substage timers overlap their parent. Only these top-level stages may
+    # contribute to request accounting. Cached receipts describe a past run.
+    for name, zh, value in (
+        ('text_encoding', '文本编码（含加载）', 0 if cache_hit or preencoded or from_preview else encoding.get('work_seconds')),
+        ('model_load', '视频模型准备与加载', engine.get('load_seconds')),
+        ('sampling', '采样', engine.get('sample_seconds')),
+        ('latent_save', '保存潜变量', engine.get('latent_save_seconds')),
+        ('decode_save', '解码与视频保存', engine.get('decode_save_seconds'))):
+        stages.append(dict(stage=name, label_zh=zh, seconds=number(value)))
+        if name == 'sampling' and sampling_reused:
+            stages[-1].update(reused_from_attempt=True, label_zh='采样（复用本次请求已完成的采样）')
+        if name == 'text_encoding' and from_preview:
+            stages[-1].update(reused_from_preview=True, label_zh='文本编码（复用预览的结果）')
+    total = number(report.get('request_seconds'))
+    measured = sum(row['seconds'] for row in stages if row['seconds'] is not None)
+    accounting = 'partial: missing stage timers' if any(r['seconds'] is None for r in stages) else 'complete stage timers'
+    if total is not None and measured <= total + .01:
+        stages.append(dict(stage='other_or_unmeasured', label_zh='其他／未单独计时', seconds=max(0., total-measured)))
+    elif total is not None:
+        accounting = 'inconsistent: stage sum exceeds request time; no percentages assigned'
+    for row in stages:
+        row['request_percent'] = (100 * row['seconds'] / total if total and row['seconds'] is not None
+                                  and measured <= total + .01 else None)
+    ranked = sorted((r for r in stages if r['seconds'] is not None), key=lambda r: r['seconds'], reverse=True)
+    config = mapping(engine.get('config')) or mapping(profile.get('engine'))
+    offload = mapping(engine.get('offload'))
+    sampling_memory = mapping(engine.get('sampling_memory'))
+    decoder_read_ahead = mapping(engine.get('decoder_read_ahead'))
+    hardware = mapping(report.get('runtime_hardware')) or mapping(policy.get('hardware'))
+    steps = engine.get('step_seconds', [])
+    steps = steps if isinstance(steps, list) and all(number(x) is not None for x in steps) else []
+    kernels = kernel_receipt(engine)
+    hints = []
+    checkpoint = mapping(encoding.get('checkpoint'))
+    actual, expected = number(checkpoint.get('bytes')), number(checkpoint.get('expected_bytes'))
+    if checkpoint.get('tested_size') is False and actual is not None and expected is not None:
+        actual, expected = encoder_sizes(actual, expected)
+        hints.append(dict(kind='configuration',
+            message='The text encoder file used is %s GiB, not the %s GiB file with the same name that FreeVideo installs and tests. '
+                    'Results and speed are not guaranteed to match the tested version.' % (actual, expected),
+            message_zh='这次使用的文本编码器文件为 %s GiB，不是 FreeVideo 安装并测试的同名文件（%s GiB）。'
+                       '生成结果和速度都不保证与测试过的版本一致。' % (actual, expected)))
+    if (mapping(engine.get('config')).get('resident_blocks') == 50
+            and number(offload.get('transfers')) == 0 and number(offload.get('h2d_bytes')) == 0):
+        hints.append(dict(kind='measured', message='All 50 transformer blocks are configured on GPU and recorded weight transfers are zero. '
+            'A larger host weight cache cannot remove transfers from this placement. This does not prove full GPU residency is the fastest placement.',
+            message_zh='全部 50 个模型块配置为 GPU 常驻，记录到的权重传输为零；增大 RAM 权重缓存不能再减少这条路径的传输，但这不证明全驻留是最快的放置方式。'))
+    if ranked:
+        hints.append(dict(kind='measured', message='Largest measured wall-time category: ' + ranked[0]['stage'],
+                          message_zh='耗时最大的已记录类别：' + ranked[0]['label_zh']))
+    if len(steps) > 1 and statistics.median(steps[1:]) > 0 and steps[0] > 2 * statistics.median(steps[1:]):
+        hints.append(dict(kind='needs_investigation', message='First sampling step exceeds twice the later-step median. '
+            'Check compilation, cache preparation and transfers; these timers do not identify the cause.',
+            message_zh='第一步耗时超过后续步骤中位数的两倍；需检查编译、缓存准备及传输，不能仅据此认定是编译。'))
+    if config.get('attention_cpu_outputs') or config.get('residual_offload'):
+        hints.append(dict(kind='configuration', message='CPU attention/residual staging is active. Check live VRAM and '
+            'policy decisions before attributing slow sampling to GPU compute.',
+            message_zh='已启用 attention 输出或残差的 CPU 暂存；需结合当时剩余显存及策略理由判断采样变慢原因。'))
+    passes = engine.get('sampling_passes')
+    for index, row in enumerate(passes if isinstance(passes, list) else [], 1):
+        # Staging is a capacity route. Several GiB of the budget left unused
+        # means the plan was more conservative than the request needed, as in
+        # issue #30: 13.5 of 30.3 GiB on a 32 GB card.
+        staged = mapping(mapping(row).get('compute_configuration'))
+        admission = mapping(mapping(row).get('pass_cache_admission'))
+        budget, peak = number(admission.get('gpu_budget_bytes')), number(admission.get('measured_peak_reserved_bytes'))
+        if (staged.get('attention_cpu_outputs') or staged.get('residual_offload')) and budget and peak \
+                and budget - peak >= 4 * 2**30:
+            hints.append(dict(kind='needs_investigation',
+                message='Sampling pass %d staged in host memory while its peak used %.1f of a %.1f GiB VRAM budget. '
+                        'The plan may be more conservative than this request needs; please report it with this file.'
+                        % (index, peak / 2**30, budget / 2**30),
+                message_zh='第 %d 遍采样启用了内存暂存，但峰值只用了 %.1f／%.1f GiB 显存预算，策略可能过于保守，请附上本文件反馈。'
+                           % (index, peak / 2**30, budget / 2**30)))
+    reserved = number(engine.get('torch_peak_reserved_bytes'))
+    capacity = number(hardware.get('vram_total'))
+    if hardware.get('system') == 'Windows' and reserved and capacity and reserved > capacity:
+        hints.append(dict(kind='needs_investigation', message='CUDA allocator peak reservation exceeds physical VRAM. '
+            'Check Windows shared GPU memory/system-memory fallback and allocator fragmentation. '
+            'Reservation alone does not prove paging caused the slowdown.',
+            message_zh='CUDA 分配器保留峰值超过物理显存；需检查 Windows 共享 GPU 内存／系统内存回退和分配碎片。仅凭 reserved 不能确认变慢由换页造成。'))
+    memory_steps = sampling_memory.get('steps') or []
+    windows_observations = [mapping(row).get('windows') for row in memory_steps] if isinstance(memory_steps, list) else []
+    windows_observations.append(sampling_memory.get('incomplete_step_windows'))
+    if any((number(mapping(mapping(row).get('local')).get('over_budget_samples')) or 0) > 0 for row in windows_observations):
+        hints.append(dict(kind='measured', message='This process exceeded its Windows local video-memory budget during sampling. '
+            'Compare the per-step nonlocal memory and latency; this is pressure evidence, not a measured PCIe paging rate.',
+            message_zh='采样时进程超过了 Windows 分配的本地显存预算。请对照每步共享内存与耗时；这是压力证据，不是 PCIe 换页速率测量。'))
+    gpu = worker_gpu(report)
+    thermal = thermal_slowdown(gpu)
+    if thermal:
+        hints.append(dict(kind='measured', message='The GPU was in thermal slowdown for %d%% of its busy time: %d of %d MHz on '
+            'average%s. Cooling limited this request, not the plan.' % (round(100 * thermal['share']), thermal['sm_clock_mean_mhz'],
+            thermal['sm_clock_max_mhz'], ' at %.0f °C' % thermal['temperature_mean_c'] if thermal['temperature_mean_c'] else ''),
+            message_zh='显卡在 %d%% 的计算时间里处于温控降频，平均 %d／%d MHz%s。这次用时受散热限制，不是规划问题。' % (
+            round(100 * thermal['share']), thermal['sm_clock_mean_mhz'], thermal['sm_clock_max_mhz'],
+            '，%.0f °C' % thermal['temperature_mean_c'] if thermal['temperature_mean_c'] else '')))
+    shared = shared_gpu(gpu)
+    if shared:
+        hints.append(dict(kind='measured', message='Other programs used about %d%% of the GPU while this request was computing, '
+            'and at least %d%% of it for %d%% of that time, so it ran slower than with the GPU to itself.' % (
+            shared['other_mean_percent'], OtherPrograms.share_percent, round(100 * shared['share'])),
+            message_zh='这次请求计算期间，其他程序占用了约 %d%% 的显卡，其中 %d%% 的时间里不低于 %d%%，所以比独占显卡时慢。' % (
+            shared['other_mean_percent'], round(100 * shared['share']), OtherPrograms.share_percent)))
+    attempts = report.get('resource_attempts', [])
+    failures = [dict(state=r.get('state'), failure=r.get('failure')) for r in attempts
+                if isinstance(r, dict) and r.get('failure')] if isinstance(attempts, list) else []
+    if failures:
+        if sampling_reused:
+            hints.append(dict(kind='measured', message='Request includes %d failed attempt(s). Sampling timings describe the '
+                'completed sampling reused by the decoder retry; the final attempt did not run sampling again.' % len(failures),
+                message_zh='本次请求包含 %d 次失败尝试。采样计时来自本次请求已完成的采样；最终尝试复用其结果，只重试解码。' % len(failures)))
+        else:
+            hints.append(dict(kind='measured', message='Request includes %d failed attempt(s); their cost is outside the final successful sampling timer.' % len(failures),
+                message_zh='本次请求包含 %d 次失败尝试，其开销未计入最终成功的采样计时。' % len(failures)))
+    def budget(key, fallback):
+        measured = number(policy.get(key))
+        planned = number(profile.get(fallback))
+        return measured if measured is not None else planned*1e9 if planned is not None else None
+    return dict(status='complete' if report.get('success') is True else 'incomplete',
+        request_seconds=total, accounting=accounting, stages=stages, findings=hints,
+        kernels=kernels or None,
+        largest_category=ranked[0]['stage'] if ranked else None,
+        step_seconds=steps, completed_nfe=len(steps),
+        sampling_plan=engine.get('sampling_plan') or report.get('sampling_plan'),
+        continuation=engine.get('continuation') or report.get('continuation'),
+        sampling_passes=engine.get('sampling_passes'), latent_upscale=engine.get('latent_upscale'),
+        sampling_reused=sampling_reused,
+        sampling_memory=sampling_memory or None,
+        decoder_read_ahead={key: decoder_read_ahead[key] for key in (
+            'state', 'read_bytes', 'total_bytes', 'allowance_bytes', 'target_bytes',
+            'elapsed_seconds', 'gpu_allocation_bytes', 'private_buffer_bytes',
+            'sampling') if key in decoder_read_ahead} or None,
+        device_memory=mapping(engine.get('device_memory')) or None,
+        seconds_per_completed_nfe=(sum(steps)/len(steps) if steps else None),
+        conditioning_cache_hit=cache_hit, preencoded=preencoded, conditioning_from_preview=from_preview,
+        geometry=report.get('geometry') or engine.get('geometry'),
+        task=config.get('task'), effective_engine_config=config,
+        config_scope='executed' if engine.get('config') else 'planned; executed config unavailable',
+        weight_placement=dict(resident_blocks=config.get('resident_blocks'), pin_host_gb=config.get('pin_host_gb'),
+            pinned_model_bytes=config.get('pinned_model_bytes'),
+            pinned_host_allocated_bytes=config.get('pinned_host_allocated_bytes'),
+            pinned_layer_count=offload.get('pinned_layer_count'), streamed_layer_count=offload.get('streamed_layer_count'),
+            pinned_buffer_bytes=offload.get('pinned_buffer_bytes'), pageable_buffer_bytes=offload.get('pageable_buffer_bytes'),
+            cuda_buffer_bytes=offload.get('cuda_buffer_bytes'),
+            host_buffer_wait_seconds=offload.get('host_buffer_wait_seconds'),
+            prefetch_wait_seconds=offload.get('prefetch_wait_seconds'),
+            stream_weights=config.get('stream_weights'), transfers=offload.get('transfers'),
+            h2d_bytes=offload.get('h2d_bytes'), host_stage_seconds=offload.get('host_stage_seconds'),
+            direct_read_layers=offload.get('direct_read_layers'), direct_read_bytes=offload.get('direct_read_bytes'),
+            host_prefetch=offload.get('host_prefetch'), host_prefetch_reads=offload.get('host_prefetch_reads'),
+            host_prefetch_wait_seconds=offload.get('host_prefetch_wait_seconds'),
+            host_prefetch_buffer_bytes=offload.get('host_prefetch_buffer_bytes'),
+            host_prefetch_disabled_reason=offload.get('host_prefetch_disabled_reason'),
+            host_prefetch_shared_reason=offload.get('host_prefetch_shared_reason'),
+            h2d_seconds=offload.get('h2d_seconds'), timing_scope='Transfer/wait timers may overlap; do not add to wall time.',
+            pinning_scope='pin_host_gb is requested decimal GB. pinned_model_bytes is actual weight payload; '
+                          'pinned_host_allocated_bytes includes rounded active and cached host allocations at load. '
+                          'Per-step host counters describe the process during sampling.'),
+        decoder_options=profile.get('decoder'),
+        hardware=hardware, failed_attempts=failures,
+        budget_bytes=dict(gpu=budget('gpu_budget_bytes', 'gpu_budget_gb'),
+                          ram=budget('ram_budget_bytes', 'inference_ram_budget_gb')),
+        observed_memory=dict(
+            sampling_allocated_bytes=engine.get('torch_peak_allocated_bytes'), sampling_reserved_bytes=reserved,
+            final_stage_allocated_bytes=engine.get('final_stage_peak_allocated_bytes'),
+            final_stage_reserved_bytes=engine.get('final_stage_peak_reserved_bytes'),
+            whole_gpu_peak_bytes=mapping(mapping(report.get('resources')).get('gpu')).get('gpu_peak_bytes'),
+            video_ram=mapping(mapping(report.get('resources')).get('ram')),
+            encoding_ram=None if cache_hit or preencoded or from_preview else mapping(mapping(report.get('encoding_resources')).get('ram'))),
+        encoder_metrics_scope=('cached receipt from a previous request; excluded from current timing' if cache_hit else
+                               "the preview's receipt; excluded from current timing" if from_preview else 'this request'),
+        compile_seconds=None,
+        compile_scope=(sampling_memory.get('compiler_scope') or
+                       'Compilation is not timed separately; never infer it from a slow first step.'))
+
+
+REQUEST_FIELDS = ('seed', 'encoder_mode', 'profile', 'resource_planning', 'compatibility',
+    'reclaimable_resident_models', 'idle_resources', 'tuning', 'input_cache', 'resource_attempts',
+    'resource_prediction', 'resource_prediction_error', 'error', 'error_message', 'error_type',
+    'resource_error', 'exception', 'encoding_failure', 'phase', 'continuation')
+
+
+def preview_receipts(output, read_json):
+    """The finished preview an upscale continued from, as its own request.
+
+    The upscale reuses the preview's text encoding and first pass. That time
+    belongs to the earlier request, but its process (encoding, load, each
+    first-pass step, decode, failed attempts) stays in the upscale's report
+    so a problem in the preview remains visible.
+    """
+    report = read_json('preview .request.json', output.with_suffix('.request.json'))
+    if not report.get('preview'):
+        return None
+    report = dict(report)
+    engine = mapping(report.get('video')) or read_json('preview .engine.json', output.with_suffix('.engine.json'))
+    encoding = mapping(report.get('encoding')) or read_json('preview .encoding.json', output.with_suffix('.encoding.json'))
+    if not report.get('resources'):
+        report['resources'] = dict(
+            ram=read_json('preview .engine.memory.json', output.with_suffix('.engine.memory.json')),
+            gpu=read_json('preview .engine.gpu.json', output.with_suffix('.engine.gpu.json')))
+    if not report.get('encoding_resources'):
+        report['encoding_resources'] = dict(
+            ram=read_json('preview .encoding.memory.json', output.with_suffix('.encoding.memory.json')))
+    return report, engine, encoding
+
+
+def write_retry(output, report, *, index, retained, next_profile=None, decision=None):
+    """Save each failed attempt before its replacement starts.
+
+    A separate file keeps the failure evidence alongside the final request's
+    complete timings and the cost of every failed attempt.
+    """
+    if type(index) is not int or not 1 <= index <= 3 or not isinstance(report, dict):
+        return None
+    rows = report.get('resource_attempts')
+    if not isinstance(rows, list) or index > len(rows) or not isinstance(rows[index - 1], dict):
+        return None
+    request = dict(report, success=False)
+    rows = [dict(row) if isinstance(row, dict) else row for row in rows[:index]]
+    failed = rows[-1]
+    previous = mapping(failed.get('recovery'))
+    failed['recovery'] = dict(previous,
+        next_profile=mapping(next_profile) or mapping(previous.get('next_profile')),
+        decision=mapping(decision))
+    request['resource_attempts'] = rows
+    request['profile'] = mapping(failed.get('profile')) or mapping(report.get('profile'))
+    request['resources'] = mapping(failed.get('resources'))
+    request.pop('video', None)  # Read the failed worker's retained sidecars.
+    return write(output, request, _retry=dict(stage='video', index=index, retained=retained))
+
+
+def write_encoder_retry(output, encoding, *, index):
+    """Save encoder OOM evidence while the failed attempt is still resident."""
+    if type(index) is not int or not 1 <= index <= 3 or not isinstance(encoding, dict):
+        return None
+    return write(output, _retry=dict(stage='encoding', index=index, encoding=encoding))
+
+
+def write(output, report=None, bridge=None, *, _retry=None, live=False):
+    """Bounded JSON/log reads only. Failure to write must not fail generation."""
+    output = Path(output)
+    notes = []
+    def read_json(suffix, path=None):
+        path = path if path is not None else output.with_suffix(suffix)
+        try:
+            if is_link(path):
+                if path.exists():
+                    notes.append(suffix + ': linked file omitted')
+                return {}
+            raw, truncated = read_bounded(path, 2 * 2**20)
+            if truncated:
+                notes.append(suffix + ': exceeds report limit')
+                return {}
+            value = json.loads(raw)
+            if not isinstance(value, dict):
+                raise ValueError('Report must be an object')
+            return value
+        except FileNotFoundError:
+            return {}
+        except (OSError, ValueError):
+            notes.append(suffix + ': unreadable or invalid')
+            return {}
+    def sampling_sidecar(metrics, artifact_output):
+        # A terminated worker may never return Engine.sample() or finalize its
+        # metrics, although SamplingMemory persisted every completed step.
+        observed = read_json('.sampling-memory.json', artifact_output.with_suffix('.sampling-memory.json'))
+        current = mapping(metrics.get('sampling_memory'))
+        def count(value):
+            rows = value.get('steps')
+            return len(rows) if isinstance(rows, list) else 0
+        if observed and (not current or count(observed) > count(current)):
+            return dict(metrics, sampling_memory=observed)
+        return metrics
+    try:
+        request = report if isinstance(report, dict) else read_json('.request.json')
+        video_retry = _retry and _retry['stage'] == 'video'
+        encoder_retry = _retry and _retry['stage'] == 'encoding'
+        engine_output = Path(_retry['retained']) / output.name if video_retry else output
+        engine = mapping(request.get('video')) or read_json('.engine.json', engine_output.with_suffix('.engine.json'))
+        engine = sampling_sidecar(engine, engine_output)
+        steps = mapping(engine.get('sampling_memory')).get('steps')
+        if isinstance(steps, list) and steps:
+            from .monitoring import step_activity
+            # A decoder retry reuses an earlier attempt's steps; that worker's
+            # GPU samples were retained with the attempt.
+            sampled_output = engine_output
+            if engine.get('sampling_reused') is True:
+                for row in request.get('resource_attempts') or ():
+                    if (isinstance(row, dict) and row.get('id') == engine.get('sampling_source_attempt')
+                            and isinstance(row.get('retained'), str)):
+                        sampled_output = Path(row['retained']) / output.name
+            step_activity(sampled_output.with_suffix('.engine.gpu.csv'), steps)
+        encoding = mapping(request.get('encoding')) or read_json('.encoding.json')
+        if encoder_retry:
+            request = dict(request, success=False, phase='encoder_oom')
+            engine = {}  # A reused CLI output path may hold an older video's sidecars.
+            encoding = dict(_retry['encoding'])
+            encoding['diagnostic_retry'] = dict(index=_retry['index'], final_attempt=_retry['index'] >= 3)
+            attempts = encoding.get('encoder_attempts')
+            latest = mapping(attempts[-1]) if isinstance(attempts, list) and attempts else {}
+            stages = encoding.get('load_stages')
+            last_stage = mapping(stages[-1]) if isinstance(stages, list) and stages else {}
+            request['encoding_failure'] = dict(phase='encoder_oom', failure=dict(kind='gpu_oom',
+                exception=latest.get('exception', []), gpu=latest or mapping(encoding.get('gpu')),
+                memory=mapping(last_stage.get('memory'))))
+        bridge = mapping(bridge) or read_json('comfy-request', output.parent / 'comfy-request.json')
+        redactor = Redactor([(str(output.parent), '<RUN>')])
+        try:
+            redactor.replacements.append((str(Path.home()), '<HOME>'))
+        except (OSError, RuntimeError):
+            pass
+        include_logs = True
+        preview_source = mapping(request.get('upscaled_preview')).get('output')
+        preview_source = Path(preview_source) if isinstance(preview_source, str) and preview_source else None
+        if preview_source and preview_source.name in ('', '.', '..'):
+            preview_source = None
+        prompts = [output.parent / 'prompt.txt', output.with_suffix('.artifacts') / 'prompt.txt']
+        if preview_source:
+            prompts += [preview_source.parent / 'prompt.txt', preview_source.with_suffix('.artifacts') / 'prompt.txt']
+        # The bridge prompt exists before the worker creates its artifacts.
+        # Live exports during startup must redact it too.
+        for prompt in prompts:
+            if not prompt.exists():
+                continue
+            try:
+                if is_link(prompt) or is_link(prompt.parent):
+                    raise ValueError('Linked prompt omitted')
+                raw, truncated = read_bounded(prompt, 64*1024)
+                if truncated:
+                    raise ValueError('Prompt exceeds redaction limit')
+                text = raw.decode('utf-8', errors='replace').strip()
+                if text:
+                    redactor.prompts.add(text)
+            except (OSError, ValueError):
+                include_logs = False
+                notes.append('Log text omitted: prompt could not be read safely for redaction')
+        redactor.structured(request)  # Learn prompts before redacting repeated error text.
+        redactor.structured(bridge)
+        preview = None
+        try:
+            preview = preview_receipts(preview_source, read_json) if preview_source else None
+            if preview:
+                redactor.structured(preview[0])
+        except Exception:
+            # A broken earlier request must not discard this request's report.
+            preview = preview_source = None
+            notes.append('preview request: unreadable')
+        # Failed children never return their telemetry into request['resources'].
+        # Their retained memory files must feed the summary, not just an unused
+        # raw section of the local report.
+        request = dict(request)
+        attempts = request.get('resource_attempts')
+        if isinstance(attempts, list) and not encoder_retry:
+            from .diagnostic_resources import attempt_metrics
+            restored = []
+            for index, row in enumerate(attempts, 1):
+                if not isinstance(row, dict):
+                    restored.append(row)
+                    continue
+                row = dict(row)
+                retained = row.get('retained')
+                if video_retry and index == _retry['index']:
+                    artifact_output = engine_output
+                elif isinstance(retained, str) and retained:
+                    artifact_output = Path(retained) / output.name
+                elif index == len(attempts) and row.get('failure'):
+                    artifact_output = output
+                else:
+                    restored.append(row)
+                    continue
+                metrics = mapping(row.get('metrics'))
+                observed = sampling_sidecar(metrics, artifact_output)
+                if observed is not metrics:
+                    row['metrics'] = dict(metrics, **attempt_metrics(observed))
+                restored.append(row)
+            request['resource_attempts'] = restored
+        if encoder_retry:
+            request['resources'] = {}
+        elif not request.get('resources'):
+            request['resources'] = dict(ram=read_json('.engine.memory.json', engine_output.with_suffix('.engine.memory.json')),
+                                       gpu=read_json('.engine.gpu.json', engine_output.with_suffix('.engine.gpu.json')))
+        if not request.get('encoding_resources'):
+            request['encoding_resources'] = dict(ram=read_json('.encoding.memory.json'))
+        summary = summarize(request, engine, encoding)
+        if live and bridge.get('status') in ('starting', 'running'):
+            summary['status'] = 'running'
+        if bridge.get('status') == 'reused':
+            summary['status'] = 'reused'
+        if video_retry or encoder_retry and _retry['index'] < 3:
+            summary['status'] = 'retrying'
+        payload = dict(schema_version=1, summary=summary,
+            runtime_code=request.get('runtime_code'), collector_version=__version__,
+            request={k:request[k] for k in REQUEST_FIELDS if k in request},
+            engine=engine, encoding=encoding,
+            memory=dict(video=request.get('resources'),
+                        encoding=request.get('encoding_resources') or dict(ram=read_json('.encoding.memory.json')),
+                        scope='Keep working RAM, PSS/RSS, commit and whole-GPU/allocator observations separate. '
+                              'Cached encoder receipts do not describe this request’s peak.'),
+            bridge={k:bridge[k] for k in ('status', 'error', 'bridge_seconds', 'bridge_wall_seconds', 'sampling_cache_install', 'encoder_prewarm') if k in bridge},
+            collection_notes=notes, log_tails={})
+        try:
+            if preview:
+                previous, previous_engine, previous_encoding = preview
+                previous_summary = summarize(previous, previous_engine, previous_encoding)
+                payload['preview_request'] = dict(label_zh='预览阶段（之前的请求）',
+                    scope='The preview this upscale continued from: an earlier request with its own encoding, load, '
+                          "first pass and decode. Its time is not part of this request's request_seconds or stage table.",
+                    runtime_code=previous.get('runtime_code'), summary=previous_summary,
+                    request={k: previous[k] for k in REQUEST_FIELDS if k in previous},
+                    engine=previous_engine, encoding=previous_encoding,
+                    memory=dict(video=previous.get('resources'), encoding=previous.get('encoding_resources')))
+            elif preview_source:
+                # A preview deleted since keeps the section its upscale's final
+                # report saved. Only a live export reads it: its run folder
+                # belongs to this request, while a reused CLI output path may
+                # hold an older video's report.
+                saved = mapping(read_json('.debug.json').get('preview_request')) if live else {}
+                if saved.get('summary'):
+                    payload['preview_request'] = saved
+                else:
+                    notes.append('preview request: unavailable')
+        except Exception:
+            payload.pop('preview_request', None)
+            notes.append('preview request: unreadable')
+        seconds = number(mapping(mapping(payload.get('preview_request')).get('summary')).get('request_seconds'))
+        if seconds is not None:
+            summary['findings'].append(dict(kind='measured',
+                message='This request continued from a preview, an earlier request of %.0f s. The preview\'s encoding, '
+                        'load, first pass and decode are reported under preview_request and are not counted here.' % seconds,
+                message_zh='本次请求从预览继续，预览是之前的一次请求（%.0f 秒）。预览的编码、加载、第一遍和解码单独列在'
+                           '“预览阶段（之前的请求）”（preview_request），不计入本次用时。' % seconds))
+        rewrite = read_json('prompt-rewrite', output.parent / 'prompt-rewrite.json')
+        if rewrite.get('schema') == 'freevideo.prompt-vlm':
+            payload['prompt_rewrite'] = rewrite
+            payload['prompt_rewrite']['timing_scope'] = 'Before video generation; excluded from video request_seconds'
+        if isinstance(bridge.get('result_cache'), dict):
+            payload['bridge']['result_cache'] = {key: bridge['result_cache'][key]
+                for key in ('enabled', 'hit', 'forced', 'stored')
+                if type(bridge['result_cache'].get(key)) is bool}
+            # Fixed counters and stage names only; never paths or cache keys.
+            for key in ('inspection', 'store_inspection'):
+                check = mapping(bridge['result_cache'].get(key))
+                if not check:
+                    continue
+                shown = {k: check[k] for k in ('seconds', 'files', 'bytes_read', 'reused_hashes')
+                         if type(check.get(k)) in (int, float) and math.isfinite(check[k]) and check[k] >= 0}
+                if check.get('status') in ('complete', 'timeout', 'busy', 'unavailable'):
+                    shown['status'] = check['status']
+                if check.get('phase') in ('starting', 'code', 'models', 'settings', 'packages', 'inputs', 'output'):
+                    shown['phase'] = check['phase']
+                shown['phase_seconds'] = {k: v for k, v in mapping(check.get('phase_seconds')).items()
+                    if k in ('code', 'models', 'settings', 'packages', 'inputs', 'output')
+                    and type(v) in (int, float) and math.isfinite(v) and v >= 0}
+                payload['bridge']['result_cache'][key] = shown
+        preview_tokens = mapping(mapping(payload.get('preview_request')).get('encoding')).get('token_summary')
+        from .comfy_progress import progress_timeline
+        from .progress_timeline import validate as validate_timeline
+        timeline = validate_timeline(progress_timeline(output))
+        if timeline is not None:
+            payload['progress_timeline'] = timeline
+            summary['progress_timeline'] = dict(events=len(timeline['events']), dropped=timeline['dropped'])
+        # Scrub structured prompts before processing log tails that may repeat them.
+        payload = redactor.structured(payload)
+        if live:
+            payload['snapshot'] = dict(collected_at=time.time(), running=summary['status'] == 'running')
+        # The generic secret redactor matches "token_summary" as a token key.
+        # Restore only its fixed numeric counts, never token IDs or text.
+        from .diagnostic_resources import token_summary
+        payload['encoding']['token_summary'] = token_summary(encoding.get('token_summary'))
+        if mapping(mapping(payload.get('preview_request')).get('encoding')):
+            payload['preview_request']['encoding']['token_summary'] = token_summary(preview_tokens)
+        for suffix in ('.engine.log', '.encoding.log', '.lora.log'):
+            path = (engine_output if suffix == '.engine.log' else output).with_suffix(suffix)
+            if include_logs and path.is_file() and not is_link(path):
+                raw, truncated = read_bounded(path, 8192)
+                payload['log_tails'][suffix] = redactor.text(raw.decode('utf-8', errors='replace'))
+        if bridge and include_logs:
+            path = output.parent / 'generate.log'
+            if path.is_file() and not is_link(path):
+                raw, _ = read_bounded(path, 8192)
+                payload['log_tails']['generate.log'] = redactor.text(raw.decode('utf-8', errors='replace'))
+        def clean(value, key=''):
+            if isinstance(value, dict):
+                return {k:clean(v, k) for k,v in value.items()}
+            if isinstance(value, list):
+                return [clean(v, key) for v in value]
+            if isinstance(value, str):
+                # Keep a useful relative name (for example ``<RUN>/video.mp4``
+                # or ``models/cache.safetensors``) while removing drive
+                # letters, usernames, mounts and unrelated parent folders.
+                if redactor._path_key(key):
+                    return redactor.path(value)
+                return redactor.text(value)
+            return value
+        suffix = '.live.debug.json' if live else '.debug.json'
+        if _retry:
+            suffix = ('.encoder-retry-' if encoder_retry else '.retry-') + str(_retry['index']) + '.debug.json'
+        target = output.with_suffix(suffix)
+        cleaned = clean(payload)
+        if timeline is not None:
+            # Counter slashes in fixed label keys look like paths to the text
+            # scrubber. Restore only the receipt already validated above.
+            cleaned['progress_timeline'] = timeline
+        from .diagnostic_summary import summary_report
+        cleaned['analysis'] = summary_report(cleaned)
+        save(target, cleaned)
+        return target
+    except Exception:
+        # Diagnostics must not turn a saved video into a failed request, nor
+        # replace an original OOM/error with a secondary reporting exception.
+        return None

@@ -1,0 +1,748 @@
+{
+  "schema_version": 1,
+  "repo": "OpenVDN/vdn-minimax-h3-edge",
+  "revision": "b3a8dd8d4cf215b3a90bcc20b4362318f5f4f158",
+  "tables": [
+    {
+      "task": "ref2va_audio",
+      "directory": "adaln-tables-v2-30cf7adedb7ba9a00ff1669e",
+      "identity": {
+        "format": "freevideo-adaln-v2",
+        "contract": "minimax-h3-adaln-silu-linear-3x6-v1",
+        "weights": "e774c1a077535cc8f79bc6ad0d99450afbbfc197d241f14c0040c7338e324649",
+        "timesteps": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            0.011764705181121826,
+            0.045454561710357666,
+            1.0
+          ],
+          [
+            0.027027010917663574,
+            0.10000002384185791,
+            1.0
+          ],
+          [
+            0.0476190447807312,
+            0.1666666865348816,
+            1.0
+          ],
+          [
+            0.07692307233810425,
+            0.25,
+            1.0
+          ],
+          [
+            0.12195122241973877,
+            0.3571428656578064,
+            1.0
+          ],
+          [
+            0.19999998807907104,
+            0.5,
+            1.0
+          ],
+          [
+            0.3684210777282715,
+            0.699999988079071,
+            1.0
+          ]
+        ],
+        "channels": 5376,
+        "dtype": "BF16",
+        "modality_rows": 3,
+        "components": 6
+      },
+      "producer": {
+        "torch": "2.13.0+cu130",
+        "cuda": "13.0",
+        "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "matmul_precision": "highest",
+        "tf32": false,
+        "bf16_reduced_reduction": true,
+        "builder_sha256": "ba90fd6c32a6791f8094ec1d7806e2639feb823eaae6d29bd076f2c8f7e51c2e",
+        "contract": "minimax-h3-adaln-silu-linear-3x6-v1"
+      },
+      "files": [
+        {
+          "bytes": 4452432,
+          "sha256": "1a7d1b845682ada79a9f5440be876e1e627a3b3993cc6adb977a4d7e7be7841f",
+          "index": 0,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/00.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "a3a006ee615d90e866d55a816b776de3d34d5d994b73a251da25af843d5a4731",
+          "index": 1,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/01.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "b46526e7264766aea5e95d477f38f7bcb51326db41e79e0fd0efb7dfe76e6e56",
+          "index": 2,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/02.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "41a49ac97b757f06e8fafa46971bd282bbf14c426030e74314bc5582d12c50fb",
+          "index": 3,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/03.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "abfd754f3b92cecb9646471cb4fc56b2ee8e6c3d777b7c14e5667e79df051a66",
+          "index": 4,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/04.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "efcbd364ed763e41ea3c5170fef6f11c5c2001828645f748a12afd3835c5de15",
+          "index": 5,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/05.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "4306987d404e8a2cf5ba416d9187f657591bb9ea7502e4cb56545eb072f6555a",
+          "index": 6,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/06.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "c25ee53c198fc39404013b98af1071a0c9c89f5b65d97545cf1c4c296cf6c02d",
+          "index": 7,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/07.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "37305e6aef80da350fe2ecb6b72f13668cd9d5f56110aae2dba3db6cb1e75521",
+          "index": 8,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/08.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "2dab56571b7e1fdfb860ed68745eff98c8493dde0b937ce34edb4f59181a3948",
+          "index": 9,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/09.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "fc3ce3e7e892c69d22b3e84c1ce4120213d9b11be0fbe36a5e580b4b3e5318e5",
+          "index": 10,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/10.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "820c7a3820de74bc681d61f4e6b14fc92d79e4260e2f5139baed81ce4f1b10cc",
+          "index": 11,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/11.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "111385f8231f472ed3553849d9eb2660d7c8fe3fa69448a2315d085fa82d9876",
+          "index": 12,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/12.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "f58cb112215f88ce172e501493208a8f17cb1ecc5a84e60405f894db3e480bb8",
+          "index": 13,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/13.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "137796491b87101fc3fbe798c452c3ad06a77e323272ff2f34bd7ab0781a2f6b",
+          "index": 14,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/14.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "8dc9e8b03c398f33779b2baa5bfc5e98d1b80ce4e43f82a323660f5900007667",
+          "index": 15,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/15.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "65e82c162af52f5789ec9630fedb98d6d0ec629b79778086c617d07e197d026d",
+          "index": 16,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/16.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "84c64097c06d93f5f307c922367b66303c226e3758e96fe4c4a0f2a49e3f4548",
+          "index": 17,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/17.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "f79c6454f2f3aaf3b0952fad284c92d7e4a2ae71169f4fffa5d300adf5fe9c0e",
+          "index": 18,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/18.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "48a8612bf6d7a6651fb8a42d701002e220df5d416f8d70ebc6e4d98db0406db4",
+          "index": 19,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/19.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "67cfb983034fe9c12384e2d0bc68efb53fc1f95b55196ac7217e97a956ef19b4",
+          "index": 20,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/20.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "548634297a197cded4c5d7434d5b92ac72278e9438feac067663bb3274ff6380",
+          "index": 21,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/21.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "f5e46597d6e715442bc0b9a5eb46f19218a084f7b164524b47a074f0f5702c38",
+          "index": 22,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/22.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "3254d4aa5ccb79b9c45108b5f637f0e762ff67ee03e45fd1867760da556ab8a6",
+          "index": 23,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/23.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "21249fa087463a525728ea2967c0e58028c48c40885ce3b5bed5893e334a80f5",
+          "index": 24,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/24.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "f6eb1d333d9539d317e1e4d1326b423bdb18bc8a9f4fb9be6b05071bb246fce1",
+          "index": 25,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/25.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "d8fa719e5c3ad274d2706a9b99dc6f58f1010309e91a5ccc2f055c777a57fb2e",
+          "index": 26,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/26.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "633605f641b582e8a9e68dc9da058c3c1690214f1724212fb902cde9c62db4c1",
+          "index": 27,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/27.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "603572f66581b3282989f30f3bcbe8b877434219718d4f4ce85189812bd3ae1a",
+          "index": 28,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/28.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "301fe6ae8f1f9a4a4a1ba53cc61f28bbf596567fc38c4400f54e256a6e8e6d86",
+          "index": 29,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/29.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "3caa6a52a5f3063740660008eef2da5b662368bd9b339d84e0616c208a99005b",
+          "index": 30,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/30.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "ca887479e82592ba307505944d3e2c150f1f6ad66c2e68d20ebd5b7f25222554",
+          "index": 31,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/31.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "a1d756cfd148cfa3ed5e3b87461521d2931cd3fe69e6b051958bec985b915575",
+          "index": 32,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/32.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "b128edff86194d00ad9e1a7229f6e7728cd616472ca6bf8fa8c63c181ee9f0da",
+          "index": 33,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/33.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "8427d50f5698739160acb308c034bc9556f323da765014d1b9ad7e50a3f584e5",
+          "index": 34,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/34.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "950b59947d92a4b2cfcceaa0b9443b0cf0b329ff0511ed31a5ceec45bc2bfdae",
+          "index": 35,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/35.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "73fd711e8492c9297d8fa970b85c54aae04ddb3b251dd2674315a04246a16b01",
+          "index": 36,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/36.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "cd2d5f2399b9d533a7fd052226a8d09c125da2d364f2835ed05bf7054363bcdf",
+          "index": 37,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/37.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "88b8708c54f988bf242bf70abfcd6ac2f5bc7e88e7bd5a553de5a160bc982ca2",
+          "index": 38,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/38.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "5cd856c98e424bee9f4e017337d7a2d81a36a5f45f90935f77c9fb276170aa48",
+          "index": 39,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/39.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "1706c7f3b3f5d843d9fb1b69a8c249204eae5b1312d37d0f32f12403406ffb20",
+          "index": 40,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/40.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "a9c4d1b140e339840084781a2f7a5f76e75222e10165771f3a89e2535b84a75c",
+          "index": 41,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/41.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "a36e705b5b6f904d6cfdb5b819dc9e9169a7b8f34c4536ae397e9b200ce07c99",
+          "index": 42,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/42.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "ee0583acf420b9dfa257903b3878347dad9fc8cc797fa1701d87d68ee65ee3fe",
+          "index": 43,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/43.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "7c7b2e4c9b90fe6a577da94d24dfeda1e53b815a17780bf7f38c3f30f6d44563",
+          "index": 44,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/44.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "5cc4b3004b1b9302c286140cc4538942c1ad9744c260ad9efe711b84ebb5cb22",
+          "index": 45,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/45.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "fba57b0d392fea462913a1972c7540732f6e9b581271d1cb4708507f9d7a4774",
+          "index": 46,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/46.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "de12ca31e2226c87a175682e999181a604b2b5d078a45b095852de57ee5459c1",
+          "index": 47,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/47.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "a304e707d013b6318ca9d9d6a27010f1b3dc1d9a77836048f2cf6a4fb462608c",
+          "index": 48,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/48.safetensors"
+        },
+        {
+          "bytes": 4452432,
+          "sha256": "142100d2b2cee95c3367286f0384fae4f451680515d3a05a0bee47d07bcb03b5",
+          "index": 49,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-30cf7adedb7ba9a00ff1669e/49.safetensors"
+        }
+      ]
+    },
+    {
+      "task": "ref2va_av",
+      "directory": "adaln-tables-v2-40a1f16eba0f5aebce69b8a5",
+      "identity": {
+        "format": "freevideo-adaln-v2",
+        "contract": "minimax-h3-adaln-silu-linear-3x6-v1",
+        "weights": "e774c1a077535cc8f79bc6ad0d99450afbbfc197d241f14c0040c7338e324649",
+        "timesteps": [
+          [
+            0.0,
+            0.9990000128746033,
+            1.0
+          ],
+          [
+            0.011764705181121826,
+            0.045454561710357666,
+            0.9990000128746033,
+            1.0
+          ],
+          [
+            0.027027010917663574,
+            0.10000002384185791,
+            0.9990000128746033,
+            1.0
+          ],
+          [
+            0.0476190447807312,
+            0.1666666865348816,
+            0.9990000128746033,
+            1.0
+          ],
+          [
+            0.07692307233810425,
+            0.25,
+            0.9990000128746033,
+            1.0
+          ],
+          [
+            0.12195122241973877,
+            0.3571428656578064,
+            0.9990000128746033,
+            1.0
+          ],
+          [
+            0.19999998807907104,
+            0.5,
+            0.9990000128746033,
+            1.0
+          ],
+          [
+            0.3684210777282715,
+            0.699999988079071,
+            0.9990000128746033,
+            1.0
+          ]
+        ],
+        "channels": 5376,
+        "dtype": "BF16",
+        "modality_rows": 3,
+        "components": 6
+      },
+      "producer": {
+        "torch": "2.13.0+cu130",
+        "cuda": "13.0",
+        "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "matmul_precision": "highest",
+        "tf32": false,
+        "bf16_reduced_reduction": true,
+        "builder_sha256": "ba90fd6c32a6791f8094ec1d7806e2639feb823eaae6d29bd076f2c8f7e51c2e",
+        "contract": "minimax-h3-adaln-silu-linear-3x6-v1"
+      },
+      "files": [
+        {
+          "bytes": 6000728,
+          "sha256": "3c2979aa38c2271ff5dfce617b1213a1a02de623a34e023d3451e0e13b927bba",
+          "index": 0,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/00.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "8f02fea1286911749f7c2c62378ca840373ad1af56ab5fdb566a5e492c6d2fee",
+          "index": 1,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/01.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "39efa3d1250b7348d53a32e53fa5e6eabe6f2498fe1ad37aa7c9f7fe772c430e",
+          "index": 2,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/02.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "258f97c11d229d21a9a8fdf4ee107aa7a178e7e926b4116a4e011bdeac7dc22b",
+          "index": 3,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/03.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "9c96da8a932f1f3979ce171af5eb6085aeb5b6d78328836b9ddd953f2a21b523",
+          "index": 4,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/04.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "f49bfc4d97e74739c96d03a538262a208ec73d83ea76d2bedf9a692e10ab6f2b",
+          "index": 5,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/05.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "37c57d8620807e66626dac048eff211b9bbfb1b43d0dca72779fdb8bd04ebc5e",
+          "index": 6,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/06.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "2755af235f8396a7ce4427c38dcfbaa246d7a6bcb5b661e2b28c920b132fde58",
+          "index": 7,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/07.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "667dfc81917c672d38d66c859ab5ce0664b7feb63659d872396ac873be41ee1e",
+          "index": 8,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/08.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "94a261f80941ccb3bc9bf45bbf79292087428e4976e75dce1eb98ce14455665f",
+          "index": 9,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/09.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "584a118b1f3138110fb5f8c47f35703b5c5b405ef6bae60161a0b6bbdede4845",
+          "index": 10,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/10.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "bec8e2accd53b111e0a259c2f464b35767274dd0517ed6bc707fd38da464942e",
+          "index": 11,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/11.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "cec562df06932e841c690d98a5ec1132342f9417699bcc744a8142aec8d043e9",
+          "index": 12,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/12.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "b92afa0a8d6e47584ddb96f111562636cd3106d88c67622894b332f8ef569481",
+          "index": 13,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/13.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "216bd81cf6037c3cd980ac40859b30861022018e10c1d5f7e3b0949a8d81a402",
+          "index": 14,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/14.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "a0814cbb8ae6b6004a36aee5826cb1dae306b0099fa6aae003185c675c8d3f2b",
+          "index": 15,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/15.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "4482b3c65b0fc10fe7d31b4d23b148d5ca37e6c4931a5ecee59a6d8239a81b18",
+          "index": 16,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/16.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "73c4efed9f144c4879e90197f1bf122672d5cc87b426d942b0392f29c576fbe5",
+          "index": 17,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/17.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "72ff17d50ce0f35961f65964abd0f516b338a537b2a92a5da5c48ec4ec4324b1",
+          "index": 18,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/18.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "c6f2fd243509d00c5e368155d4d46ae53cf2a8b7b641d6b51492e2214d3455f2",
+          "index": 19,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/19.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "872ef54185f35491e9790d230222e0b4a40298bf683b97fc7d2ad8d0cf3823d5",
+          "index": 20,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/20.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "ecec5c0e70a95a52f5ce7ec2898d01599e2fdb797ddc6aab469ea86401c55a16",
+          "index": 21,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/21.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "d29d3a68f28876f513480b72763ea6158b806d6ed070e0061de97ebb26df812f",
+          "index": 22,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/22.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "565cb5af834fb79fdd8387e593fedc0d5e0cb1333fc6a4978db69e18d75c45df",
+          "index": 23,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/23.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "240712b90c619ef5da2e3bf16ab20b217a189c77ad71290b884745b04548feed",
+          "index": 24,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/24.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "c8e2b432185b0e22a00942748b934fe761b03a00d093bd285cdb394787c88ad5",
+          "index": 25,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/25.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "312f9644a79a4cb01870571b51bc6e8f6e9f236140beb7b9358e86444d49a8b9",
+          "index": 26,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/26.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "4f0259c92e897513d4823d9fe8d4aa33016432a7443cff875785898027f24630",
+          "index": 27,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/27.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "492b4ca0d946c13a4e2b87d2f4e3763156d3a38e175c9cb08f41684f3e7fcbd4",
+          "index": 28,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/28.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "8ab3040a5f5a8019285bfe51fc141ab44e136b6fa4af0890c246c3ca082bcebb",
+          "index": 29,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/29.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "5ad9d55de8d43d3fecb071e0e6f351a581d6a7d0f723081cc16721b82755226b",
+          "index": 30,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/30.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "776b0aa7f3c0e315ea367ad5be6289916d4fc9d6fa1516aa7e4947a2700af7f5",
+          "index": 31,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/31.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "ae6c68973d3e55d32ce7c043c6a0c3a17e806ae38361dfef7ddbfd7b35b086cd",
+          "index": 32,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/32.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "b290df1a697fd2a458276c709b704b30e4f38a5956d56f65d125bb56084244da",
+          "index": 33,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/33.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "272bc1dff7a74c41e527f443e872afee1e3d1435b48e4eb34329eadbfbb4a9fd",
+          "index": 34,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/34.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "6f5d435974749711d57aacb0560374d8a51c925279431be4ad938090080f4c38",
+          "index": 35,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/35.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "8502bfb4d5cd76341e7ced1131348b210beddec08e887aa442281d249e8c74f9",
+          "index": 36,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/36.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "bfa357273ec35308e4f7ce18019caf5263577199d19e69a29335de64002f905a",
+          "index": 37,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/37.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "a0ab06f1b16c4892bc7d33fec0709e231d2c82cb8d016c50a3e96d946639c3d3",
+          "index": 38,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/38.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "20c061d97988ac18034afea8187435f2497e8acb08c614756ca4e495c5cfc838",
+          "index": 39,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/39.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "7da44015dd2507ec231876cd825b67e553504bf107725573b21ad5c18a1ae7b6",
+          "index": 40,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/40.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "599c154d9bedae5e25c24342f2bc74bacaf526ca7d498c32ff09d7c87f3d82b2",
+          "index": 41,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/41.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "53bd6f07030d19ee4925adce9ee7d29a0697e8949f67afd4279ba286715573e2",
+          "index": 42,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/42.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "0d400d5c8f29a4760fc7eaefeeca80eb419722a7ec8f89b2c74bb23aeac01f46",
+          "index": 43,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/43.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "f6b46bba373235c386b0d7c7af72f5a952347aab568a3ca6ac3d411cae2000e5",
+          "index": 44,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/44.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "da173acf1e55035abdd79770a99b04a6df76eefab9c76d0d9a151e29d8f64009",
+          "index": 45,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/45.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "17ca3a9a25e03d0a02edff967b136fe457f80f1368e1a69eb94b2ba452e4449f",
+          "index": 46,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/46.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "5476cea7c5693174e15ed623406b222362acf3e25fcb0f54d4a0b3cf7cbeab77",
+          "index": 47,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/47.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "250de6b4139c1d4d2fe429d643f371a83c1115ab7052ddb2e741ed3566e107c3",
+          "index": 48,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/48.safetensors"
+        },
+        {
+          "bytes": 6000728,
+          "sha256": "b917ad15f865dc8159ec3dd3b35656f2ad0d0d51c2fd1223e32400718020bdea",
+          "index": 49,
+          "file": "sampling-presets-v1-audio-20261007/adaln-tables-v2-40a1f16eba0f5aebce69b8a5/49.safetensors"
+        }
+      ]
+    }
+  ],
+  "prefix": "sampling-presets-v1-audio-20261007"
+}

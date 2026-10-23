@@ -1,0 +1,98 @@
+<div id="ams-layouts" class="viz-carousel" aria-label="AiMediaStudio layout directions">
+  <section data-variant="Production desk" aria-label="Production desk concept"><div class="ams-app desk" data-layout="desk"></div></section>
+  <section data-variant="Creative library" aria-label="Creative library concept" hidden><div class="ams-app library" data-layout="library"></div></section>
+  <section data-variant="Director workspace" aria-label="Director workspace concept" hidden><div class="ams-app director" data-layout="director"></div></section>
+</div>
+<style>
+#ams-layouts .ams-app{--ams-bg:light-dark(#f3f4f6,#15181d);--ams-panel:light-dark(#fff,#1c2027);--ams-field:light-dark(#e8ecf0,#252b34);--ams-text:light-dark(#202835,#edf0f5);--ams-muted:light-dark(#586578,#a1adbe);--ams-line:light-dark(#d9dfe7,#323a46);--ams-accent:#7295ff;--ams-accent-text:#101b3d;color:var(--ams-text);background:var(--ams-bg);font:13px/1.5 'Segoe UI',sans-serif;border:1px solid var(--ams-line);border-radius:12px;overflow:clip;min-height:650px;text-align:left}
+#ams-layouts *{box-sizing:border-box}
+#ams-layouts .ams-app header{display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid var(--ams-line);background:var(--ams-panel);flex-wrap:wrap;padding-right:100px}
+#ams-layouts .brand{font-size:16px;font-weight:600;letter-spacing:-.5px;margin-right:auto}
+#ams-layouts .brand span{color:var(--ams-accent)}
+#ams-layouts .ams-app button,#ams-layouts .ams-app select,#ams-layouts .ams-app textarea,#ams-layouts .ams-app input{font:inherit;color:var(--ams-text);background:var(--ams-field);border:1px solid var(--ams-line);border-radius:6px;padding:8px 10px;max-width:100%}
+#ams-layouts .ams-app button{cursor:inherit}#ams-layouts .ams-app button:hover{border-color:var(--ams-accent)}
+#ams-layouts .ams-app button.active{color:var(--ams-text);border-color:var(--ams-accent);background:color-mix(in srgb,var(--ams-accent) 15%,var(--ams-panel))}
+#ams-layouts .ams-app button.generate{background:var(--ams-accent);color:var(--ams-accent-text);border-color:var(--ams-accent);font-weight:600}
+#ams-layouts .ams-app h2{font-size:15px;font-weight:600;margin:0 0 12px;color:var(--ams-text)}
+#ams-layouts .ams-app p{margin:6px 0;color:var(--ams-muted)}
+#ams-layouts .ams-body{display:grid;grid-template-columns:180px minmax(0,1fr) 245px;min-height:550px}
+#ams-layouts aside{padding:18px 14px;background:var(--ams-panel);border-right:1px solid var(--ams-line);min-width:0}
+#ams-layouts aside button{display:block;width:100%;text-align:left;margin:5px 0;background:transparent!important;border-color:transparent!important}
+#ams-layouts aside button.active{background:var(--ams-field)!important;border-color:var(--ams-line)!important}
+#ams-layouts .group-label{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--ams-muted);margin:20px 8px 8px}
+#ams-layouts .workspace{padding:20px;min-width:0}
+#ams-layouts .inspector{padding:18px;border-left:1px solid var(--ams-line);background:var(--ams-panel);min-width:0}
+#ams-layouts .inspector label{display:block;margin:16px 0 6px;color:var(--ams-muted);font-size:12px}
+#ams-layouts .inspector select,#ams-layouts textarea{width:100%}
+#ams-layouts .inspector textarea{min-height:105px;resize:vertical}
+#ams-layouts .modebar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+#ams-layouts .modebar button{background:transparent}
+#ams-layouts .stage{position:relative;min-height:245px;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;background:linear-gradient(155deg,#273849,#4c6570 45%,#c6a47e);color:#fff;border-radius:8px;overflow:hidden}
+#ams-layouts .stage:before{content:'';position:absolute;inset:30% -10% -50%;border-radius:50%;background:linear-gradient(135deg,#697c71,#152b31);transform:rotate(-12deg)}
+#ams-layouts .stage:after{content:'';position:absolute;width:64px;height:64px;border-radius:50%;background:#f1d7a3;top:26px;right:75px;box-shadow:0 0 60px #f4d49b55}
+#ams-layouts .stage>*{z-index:1;position:relative}#ams-layouts .stage small{opacity:.85}#ams-layouts .stage strong{font-size:23px;letter-spacing:-.5px;font-weight:500}
+#ams-layouts .stage.audio{background:repeating-linear-gradient(90deg,#263d57 0px,#263d57 5px,#55799f 6px,#55799f 9px);justify-content:center;text-align:center}
+#ams-layouts .stage.audio:before,#ams-layouts .stage.audio:after{display:none}
+#ams-layouts .stage.writer{background:var(--ams-field);color:var(--ams-text)}#ams-layouts .stage.writer:before,#ams-layouts .stage.writer:after{display:none}
+#ams-layouts .playerbar{display:flex;align-items:center;gap:12px;margin:12px 0 22px;color:var(--ams-muted)}
+#ams-layouts .playerbar span:first-of-type{flex:1;background:var(--ams-line);height:3px}
+#ams-layouts .asset-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#ams-layouts .asset{min-width:0;border:1px solid var(--ams-line);border-radius:7px;background:var(--ams-panel);padding:0!important;text-align:left;overflow:hidden}
+#ams-layouts .asset .thumb{height:72px;background:linear-gradient(135deg,#436775,#a99579);display:flex;align-items:end;padding:8px;color:#fff;font-size:11px}
+#ams-layouts .asset:nth-child(2) .thumb{background:linear-gradient(125deg,#304b43,#bcb18c)}
+#ams-layouts .asset:nth-child(3) .thumb{background:repeating-linear-gradient(90deg,#2c394e 0px,#2c394e 5px,#526f98 6px,#526f98 8px)}
+#ams-layouts .asset b{display:block;font-weight:500;padding:9px;overflow-wrap:anywhere}
+#ams-layouts .context-line{padding:10px 12px;border:1px solid var(--ams-line);border-radius:6px;margin-bottom:16px;font-size:12px;color:var(--ams-muted)}
+#ams-layouts .bottom{padding:12px 18px;border-top:1px solid var(--ams-line);display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--ams-muted);background:var(--ams-panel)}
+#ams-layouts .bottom span:last-child{margin-left:auto}
+#ams-layouts .queue{margin-top:18px;border-top:1px solid var(--ams-line);padding-top:14px;font-size:12px}
+#ams-layouts .library .ams-body{grid-template-columns:150px minmax(0,1fr)}
+#ams-layouts .library .workspace{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:18px}
+#ams-layouts .library .inspector{border:1px solid var(--ams-line);border-radius:10px}
+#ams-layouts .library .modebar{grid-column:1/-1;margin:0}
+#ams-layouts .library .asset-strip{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}
+#ams-layouts .library .stage{min-height:170px}
+#ams-layouts .library .playerbar{display:none}
+#ams-layouts .library .context-line{border:0;padding:0}
+#ams-layouts .director .ams-body{grid-template-columns:155px minmax(0,1fr) 285px}
+#ams-layouts .director .workspace .stage,#ams-layouts .director .workspace .playerbar{display:none}
+#ams-layouts .conversation{display:none}#ams-layouts .director .conversation{display:block}
+#ams-layouts .bubble{padding:14px;background:var(--ams-panel);border:1px solid var(--ams-line);border-radius:9px;margin:14px 0;overflow-wrap:anywhere}
+#ams-layouts .bubble.mine{background:var(--ams-field);margin-left:36px}
+#ams-layouts .director .asset-strip{grid-template-columns:1fr;margin:16px 0}
+#ams-layouts .director .asset{display:flex;align-items:center}
+#ams-layouts .director .asset .thumb{min-width:90px;min-height:60px}
+#ams-layouts .compose{margin-top:18px;display:flex;gap:8px;align-items:end}#ams-layouts .compose textarea{min-height:75px;resize:vertical}
+#ams-layouts .settings-view{padding:24px;min-height:550px}
+#ams-layouts .settings-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+#ams-layouts .model-row{display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:15px;align-items:center;padding:18px 0;border-bottom:1px solid var(--ams-line)}
+#ams-layouts .model-row small{display:block;color:var(--ams-muted)}
+#ams-layouts .notice{margin-top:16px;color:var(--ams-muted);font-size:12px;min-height:20px}
+#ams-layouts [hidden]{display:none!important}
+@media(max-width:800px){#ams-layouts .ams-body,#ams-layouts .director .ams-body{grid-template-columns:140px minmax(0,1fr)}#ams-layouts .ams-body>.inspector{grid-column:1/-1;border-left:0;border-top:1px solid var(--ams-line)}#ams-layouts .library .workspace{display:block}#ams-layouts .library .inspector{margin-top:16px}#ams-layouts .ams-app{min-height:900px}}
+@media(max-width:480px){#ams-layouts .ams-body,#ams-layouts .director .ams-body,#ams-layouts .library .ams-body{grid-template-columns:1fr}#ams-layouts aside{display:flex;gap:5px;flex-wrap:wrap;padding:10px}#ams-layouts aside .group-label{display:none}#ams-layouts aside button{width:auto;margin:0}#ams-layouts .ams-app header{padding:14px;gap:8px}#ams-layouts .brand{width:100%}#ams-layouts .asset-strip{grid-template-columns:1fr}#ams-layouts .library .asset-strip{grid-template-columns:1fr}#ams-layouts .model-row{grid-template-columns:1fr}#ams-layouts .ams-app{min-height:1300px}}
+</style>
+<script>
+(()=>{
+const root=document.getElementById('ams-layouts');
+const assets=[['Video · 00:08','Coastal reveal · take 03'],['Image · 768 × 768','Coastline reference'],['Voice · 00:12','Opening narration']];
+const inspector=`<h2>Generation settings</h2><label>Model</label><select aria-label="Generation model"><option>VDN-H3 · High quality</option><option>Browse compatible models…</option></select><label>Prompt</label><textarea aria-label="Generation prompt">Slow camera push toward the coastline. Warm evening light. Preserve the reference composition.</textarea><label>References</label><button class="reference">Coastline reference · attached</button><label>Length / quality</label><select aria-label="Length and quality"><option>8 seconds · High</option><option>15 seconds · High</option></select><button class="generate" style="width:100%;margin-top:18px">Add to render queue</button><div class="queue">Queue · no active jobs<br><p>GPU used by one engine at a time</p></div>`;
+root.querySelectorAll('.ams-app').forEach(app=>{
+const kind=app.dataset.layout;
+const thumbs=assets.map((a,i)=>`<button class="asset ${i===0?'active':''}" data-asset="${i}"><div class="thumb">${a[0]}</div><b>${a[1]}</b></button>`).join('');
+app.innerHTML=`<header><div class="brand">Ai<span>Media</span>Studio</div><select class="project" aria-label="Workspace"><option value="project">Coastal film ▾</option><option value="free">Free work</option></select><button class="settings">Settings</button></header><div class="ams-body"><aside><div class="group-label">Workspace</div><button class="nav active">Create</button><button class="nav">Media library</button><button class="nav">Assistant</button><div class="group-label">Project</div><button class="context">Context & references</button><button class="nav">Exports</button><div class="group-label">Collections</div><button class="nav">All media</button><button class="nav">Favorites</button></aside><div class="workspace"><div class="modebar"><button class="active" data-mode="Video">Video</button><button data-mode="Image">Image</button><button data-mode="Voice">Voice</button><button data-mode="Writing">Writing</button></div><div class="main-content"><div class="context-line">Coastal film · warm evening palette · shared references enabled</div><div class="stage"><small>CONCEPT PREVIEW · VIDEO</small><strong>Coastal reveal</strong></div><div class="playerbar"><button class="play" aria-label="Preview playback">Play</button><span></span><span>00:00 / 00:08</span></div><div class="conversation"><div class="bubble mine">Turn this coastline image into a short opening shot, then help me write the narration.</div><div class="bubble">I’ll use the project’s warm evening palette and coastline reference. Here’s the proposed shot.</div></div><h2 style="margin-top:18px">${kind==='library'?'Project media':kind==='director'?'Proposed assets':'Related media'}</h2><div class="asset-strip">${thumbs}</div><div class="compose" ${kind==='director'?'':'hidden'}><textarea aria-label="Assistant message" placeholder="Describe the next step…"></textarea><button class="generate">Send</button></div><div class="notice" aria-live="polite"></div></div>${kind==='library'?`<div class="inspector">${inspector}</div>`:''}</div>${kind!=='library'?`<div class="inspector">${kind==='director'?'<h2>Proposed job · awaiting approval</h2>':''}${inspector}</div>`:''}</div><div class="settings-view" hidden><div class="settings-tabs"><button class="back">← Workspace</button><button class="active">Models & engines</button><button>Storage</button><button>Performance</button></div><h2>Models & engines</h2>${[['Video','VDN-H3','Current video model'],['Image','Qwen Image 2.1 Turbo','Current image model'],['Voice','Qwen VoiceDesign / Base','Design and narration'],['Writing','Hermes 3 · 8B','Local writing assistant']].map(m=>`<div class="model-row"><span>${m[0]}</span><div>${m[1]}<small>${m[2]} · installed locally</small></div><button class="browse">Manage models</button></div>`).join('')}<div class="notice" aria-live="polite"></div></div><div class="bottom"><span class="scope">Project: Coastal film</span><span>Local engines</span><span>Layout concept · no generation</span></div>`;
+const body=app.querySelector('.ams-body'),settings=app.querySelector('.settings-view'),notice=app.querySelector('.main-content .notice');
+app.querySelector('.settings').onclick=()=>{body.hidden=true;settings.hidden=false;};
+app.querySelector('.back').onclick=()=>{body.hidden=false;settings.hidden=true;};
+app.querySelector('.project').onchange=e=>{const free=e.target.value==='free';app.querySelector('.scope').textContent=free?'Free work · no project selected':'Project: Coastal film';app.querySelector('.context-line').textContent=free?'Free work · use references for this creation only':'Coastal film · warm evening palette · shared references enabled';notice.textContent=free?'Save to project is available when you want to organize this work.':'';};
+app.querySelector('.context').onclick=()=>{notice.textContent='Shared project context: creative brief, visual style, reference images, character profiles and preferred voices. Choose which apply to each job.';};
+app.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{app.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x===b));const mode=b.dataset.mode,stage=app.querySelector('.stage');stage.className='stage'+(mode==='Voice'?' audio':mode==='Writing'?' writer':'');stage.querySelector('small').textContent='CONCEPT PREVIEW · '+mode.toUpperCase();stage.querySelector('strong').textContent=mode==='Voice'?'Opening narration':mode==='Writing'?'An opening worth watching.':mode==='Image'?'Coastline reference':'Coastal reveal';notice.textContent=mode+' workspace selected. Project media and context remain shared.';});
+app.querySelectorAll('[data-asset]').forEach(b=>b.onclick=()=>{app.querySelectorAll('[data-asset]').forEach(x=>x.classList.toggle('active',x===b));notice.textContent=assets[Number(b.dataset.asset)][1]+' selected · Open, use as reference, continue, or export.';});
+app.querySelectorAll('.generate').forEach(b=>b.onclick=()=>{notice.textContent='Concept only: review the job, then submit it to the shared render queue.';});
+app.querySelectorAll('.browse').forEach(b=>b.onclick=()=>{settings.querySelector('.notice').textContent='Model manager: Installed / Compatible downloads / Import local model. Show engine compatibility, download size, license, available disk space and hardware requirements before installation.';});
+app.querySelectorAll('aside .nav').forEach(b=>b.onclick=()=>{app.querySelectorAll('aside .nav').forEach(x=>x.classList.toggle('active',x===b));notice.textContent=b.textContent+' view · same project, same shared media.';});
+const state={accent:'#7295ff'};
+if(globalThis.Tweak){const tweak=new Tweak({container:app,onChange:()=>app.style.setProperty('--ams-accent',state.accent)});tweak.addColorPicker(state,'accent',{label:'Studio accent'});}
+});
+})();
+</script>

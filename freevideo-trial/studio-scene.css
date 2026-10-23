@@ -1,0 +1,41 @@
+/* The video editor reuses the existing preview, forms and chain controls. */
+main[data-view] #videoStudio.scene-workspace{grid-template-columns:minmax(0,1.45fr) minmax(330px,.95fr)!important;grid-template-areas:'stage controls'!important;align-items:start;gap:18px}
+#videoStudio .scene-stage{grid-area:stage;min-width:0;display:grid;gap:16px}
+#videoStudio .scene-stage>.workspace-preview{grid-area:auto;position:relative}
+#videoStudio .workspace-controls{grid-area:controls;position:sticky;top:14px;padding:0;overflow:hidden;max-height:max(420px,calc(100vh - 120px));display:flex;flex-direction:column}
+#videoStudio #form{display:flex;flex-direction:column;min-height:0;max-height:max(340px,calc(100vh - 190px))}
+.scene-inspector-heading{padding:18px 20px 10px}.scene-inspector-heading h2{font-size:17px;margin:0 0 4px}.scene-inspector-heading p{font-size:12px}
+#sceneTabs{display:grid;grid-template-columns:repeat(4,1fr);padding:0 12px;border-bottom:1px solid #35404e;flex-shrink:0;gap:2px}
+#sceneTabs button{border:0;border-radius:0;background:transparent;padding:13px 3px;color:#9eabbd;font-size:12px;border-bottom:2px solid transparent}
+#sceneTabs button[aria-selected=true]{color:#d9e4ff;border-bottom-color:#8fa9ff;background:#253045}
+.scene-tab-panel{padding:18px 20px;overflow:auto;min-height:0;max-height:62vh;flex:1}
+#videoStudio .scene-tab-panel textarea{min-height:95px}#videoStudio #prompt{min-height:170px}
+#videoStudio .scene-tab-panel>label,#videoStudio .scene-tab-panel>select{margin-top:10px}
+#videoStudio .scene-tab-panel>.file:first-child{margin-top:0}
+#videoStudio .scene-tab-panel .row{gap:10px}.scene-tab-panel .hint{font-size:11px;line-height:1.55}
+.scene-character{background:#151a22;border:1px solid #35404e;border-radius:9px;padding:14px;margin-bottom:12px}
+.scene-card-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.scene-card-header h2{margin:0;font-size:16px}.scene-card-header button{font-size:12px;padding:6px 9px}
+.scene-character label{font-size:12px;color:#b1bed0;margin-top:12px}.scene-character select,.scene-character textarea{font-size:13px}.scene-character textarea{min-height:80px!important}
+.scene-render-footer{border-top:1px solid #35404e;padding:12px 16px;background:#1a202a;flex-shrink:0}.scene-render-footer>.actions{margin:0;gap:8px}.scene-render-footer #generate{flex:1}.scene-render-footer #message{margin-top:7px;font-size:12px}
+.scene-speech-notice{padding:10px;border:1px solid #7b683e;background:#2c281d;border-radius:7px;font-size:12px;margin-bottom:10px}.scene-speech-notice p{font-size:11px}.scene-speech-notice label{font-size:12px;margin:8px 0 0}.scene-speech-notice input{width:auto;margin-right:8px}
+#videoStudio .scene-stage video{max-height:min(55vh,550px);min-height:180px;object-fit:contain}.scene-stage .empty{min-height:270px}.scene-stage .actions{gap:7px;margin-top:12px}.scene-stage .actions button,.scene-stage .actions a{font-size:12px}
+.scene-beat-panel{padding:18px}.scene-beat{display:grid;grid-template-columns:24px minmax(100px,.65fr) minmax(180px,1.6fr) 30px;gap:10px;align-items:start;border-top:1px solid #303b49;padding:12px 0}.scene-beat>span{font-size:12px;color:#7f96bc;padding-top:29px;font-variant-numeric:tabular-nums}.scene-beat label{font-size:11px;color:#9eabbd;margin:0}.scene-beat textarea{min-height:76px;font-size:13px;padding:9px}.scene-beat select{font-size:12px;padding:9px}.scene-beat-tools{display:flex;flex-direction:column;gap:4px;padding-top:22px}.scene-beat-tools button{padding:2px 5px;font-size:12px}.scene-chain-tools{border-top:1px solid #35404e;padding-top:14px;margin-top:16px!important}.scene-chain-tools summary{font-size:13px}
+main[data-view=desk] #videoStudio.scene-workspace{grid-template-columns:minmax(330px,.95fr) minmax(0,1.45fr)!important;grid-template-areas:'controls stage'!important}
+main[data-view=library] #videoStudio.scene-workspace{grid-template-columns:minmax(0,1fr)!important;grid-template-areas:'stage' 'controls'!important}main[data-view=library] #videoStudio .workspace-controls{position:static;max-height:none}main[data-view=library] #videoStudio #form{max-height:none}
+@media(max-width:1180px){main[data-view] #videoStudio.scene-workspace{grid-template-columns:minmax(0,1fr)!important;grid-template-areas:'stage' 'controls'!important}#videoStudio .workspace-controls{position:static;max-height:none}#videoStudio #form{max-height:none}.scene-tab-panel{max-height:none}}
+@media(max-width:650px){.scene-beat{grid-template-columns:22px minmax(0,1fr) 28px}.scene-beat>label:nth-of-type(2){grid-column:2}.scene-beat-tools{grid-column:3;grid-row:1/3}#sceneTabs button{font-size:11px}.scene-tab-panel{padding:14px}.scene-inspector-heading{padding:14px}.scene-stage .empty{min-height:180px}}
+
+.scene-character>summary{cursor:pointer;margin:0;list-style:none}.scene-character>summary::before{content:"▾";color:#8fa9cc}.scene-character:not([open])>summary::before{content:"▸"}.scene-character>summary strong{flex:1}.scene-character[open]>summary{margin-bottom:10px}
+
+.scene-render-footer #message{max-height:90px;overflow:auto}.scene-render-footer #errorDetails{max-height:130px;overflow:auto}
+/* Put the view switch beside the work title instead of consuming a separate row. */
+main[data-engine=video]>header{height:0;min-height:0;margin:0!important;position:relative;z-index:2}
+main[data-engine=video]>header .view-picker{position:absolute;right:0;top:0;width:220px!important;min-width:0}
+main[data-engine=video]>#workHeader{min-height:76px;padding:0 0 18px;align-items:flex-start}
+main[data-engine=video]>#workHeader>div{max-width:calc(100% - 240px)}
+main[data-engine=video]>#workModelStatus:empty{display:none}
+#videoStudio .scene-stage .empty{min-height:180px}
+#videoStudio .scene-stage video{max-height:min(36vh,440px)}
+@media(max-width:560px){main[data-engine=video]>header .view-picker{width:175px!important}main[data-engine=video]>#workHeader>div{max-width:calc(100% - 190px)}}
+
+.scene-character>summary strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.scene-character>summary small{font-size:10px;color:#aebcd3;white-space:nowrap}

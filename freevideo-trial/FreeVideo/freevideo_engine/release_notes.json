@@ -1,0 +1,278 @@
+{
+  "schema": 1,
+  "product_version": "0.4.4",
+  "en": {
+    "summary": "Continuing a video segment by segment no longer stops with a memory error, medium-size videos on Windows with 16 GB or smaller cards are fast again in the second pass, and image generation on Windows no longer stalls. The editing view gains reference pictures and imported-video continuation, and several issues that stopped generation or setup are fixed.",
+    "changes": [
+      "Continuing a video segment by segment no longer stops with a memory error from the second segment on.",
+      "Windows: medium-size videos on graphics cards with 16 GB or less no longer slow down in the second pass.",
+      "Image generation: on Windows it no longer stalls while the image model starts, reports a false out-of-memory error after loading, or stalls while checking downloaded model files; tall pictures no longer show purple vertical lines or a grid texture.",
+      "After a video finishes, FreeVideo releases graphics and system memory right away unless the next part is about to start, and gives way at once to image generation or other programs.",
+      "Editing view: the generation bar takes reference pictures (upload one or make one with the image model, then set it as reference, first frame or last frame), every Generate press answers at once, and queued parts stay queued after the page is reloaded and start by themselves; if generation cannot run, they go back to drafts with the reason.",
+      "Editing view: videos imported from your computer can be extended and continued, files dropped on the timeline land where they are dropped, reopening it from the launcher keeps it usable, and keys pressed in the media library no longer change the timeline.",
+      "Mac: generating with reference pictures no longer runs out of memory while encoding; the compatibility setting, which only applies to separate graphics cards, is no longer shown.",
+      "Additional model folders entered in the node settings are now saved and used when FreeVideo looks for models and starts.",
+      "Edge model files now download from the ModelScope domestic site, and the image model gains an additional mirror source.",
+      "Image editor: leaving or reloading the page with unsaved changes now asks first. Flipping, resetting, fitting or dragging the locked original works on an automatic copy as one undo step. Renaming a layer by double-click keeps the name, and invalid canvas sizes are explained instead of failing silently.",
+      "Small mismatches no longer stop the launcher, setup, saved Agent films and cast cards, subtitle import, the image editor, sharing or prompt enhancement; FreeVideo continues and repairs what it can. Turning off or cancelling prompt enhancement while it runs stops it cleanly, and the release link in the update notice opens the latest release.",
+      "A workflow restored with an empty Total frames value no longer fails with a frame-count error; it generates by duration."
+    ]
+  },
+  "zh": {
+    "summary": "一段接一段连续生成不再因内存报错；Windows 上 16 GB 及以下显卡生成中等尺寸视频，第二遍恢复原来的速度；Windows 图像生成不再卡住。剪辑视图可以加参考图、接续导入的视频，另修复了几处会让生成或安装中断的问题。",
+    "changes": [
+      "一段接一段连续生成时，从第二段起不再因内存不足报错。",
+      "Windows：16 GB 及以下显卡生成中等尺寸视频时，第二遍不再变慢。",
+      "图像生成：Windows 上图像模型启动时不再卡住、加载完不再误报内存不足，下载后校验文件不再卡住；高图上不再出现紫色竖线和网格纹。",
+      "视频生成完会立即释放显存和内存；下一段马上开始时才短暂保留，遇到图像生成或其他程序要用时立刻让出。",
+      "剪辑视图：生成条可以加参考图（上传图片或用图像模型生成一张，可设为参考、首帧或尾帧）；每次点“生成”都会立刻有反应，排队的段刷新页面后仍在排队、轮到时自动开始，不能生成时退回草稿并说明原因。",
+      "剪辑视图：从电脑导入的视频也能往后接续生成，拖到时间线上的文件落在松手的位置；从启动入口再次进入时可以正常操作，素材库里按键不再改动时间线。",
+      "Mac：用参考图生成时，编码阶段不再报内存不足；只对独立显卡起作用的兼容性设置不再显示。",
+      "节点设置里填写的“其他模型目录”现在会保存，查找模型和启动时都会用到。",
+      "Edge 模型文件改从魔搭国内站下载，图像模型增加一个镜像下载源。",
+      "图片编辑器：有未保存的改动时离开或刷新页面会先提示；对已锁定的原图翻转、重置、适配或拖动时，自动在副本上操作并算一步撤销；双击重命名图层保留名称；画布尺寸不合法时给出提示而不是无反应。",
+      "启动器、安装、Agent 已存的影片和角色卡、字幕导入、图片编辑器、分享和提示词改写遇到小偏差不再中断，FreeVideo 会继续并自动修复能修的部分；提示词增强运行中关闭或取消时会正常停止，更新提示里的发布页链接打开最新版本。",
+      "恢复的工作流把“总帧数”留空时，生成不再因帧数校验报错，按时长正常生成。"
+    ]
+  },
+  "history": [
+    {
+      "product_version": "0.4.3",
+      "en": {
+        "summary": "LAN access settings of offline-package installations are kept when the launcher is reopened, and the agent no longer replies after a job is stopped on the page. Also includes several fixes; the image generation models can now be downloaded and installed normally.",
+        "changes": [
+          "With an offline-package installation, LAN access and its port now stay as set after the launcher is reopened.",
+          "After a job is stopped on the page, the agent adds no message about it and does not retry on its own.",
+          "When the agent asks for a video length this computer cannot make, it now gets a clear explanation instead of an error.",
+          "The image generation models can now be downloaded and installed normally."
+        ]
+      },
+      "zh": {
+        "summary": "用离线包安装时，局域网访问的设置在重开启动器后保留；在页面上停止任务后，Agent 不再另外回复；另有几处修复，图像生成模型现在可以正常下载和安装。",
+        "changes": [
+          "用离线包安装时，局域网访问的开关和端口在重开启动器后保持不变。",
+          "在页面上停止任务后，Agent 不再另外回复，也不会自行重试。",
+          "Agent 请求的视频长度超出这台电脑能做的范围时，会收到明确的说明，不再出错。",
+          "图像生成模型现在可以正常下载和安装。"
+        ]
+      }
+    },
+    {
+      "product_version": "0.4.2",
+      "en": {
+        "summary": "Adds optional image generation models: generate and edit pictures, make several views for character cards, and let the agent use them. Also fixes several install and launcher issues.",
+        "changes": [
+          "Adds optional image generation models. \"Generate with AI\" in the media panel makes a picture from one sentence on a blank canvas, and \"Edit this\" in the image editor changes the current picture, with up to two more pictures from your media as references.",
+          "With the image generation models installed, character cards start from a front view and use it as the reference for three-quarter, side, back and close-up views; scene cards are made the same way.",
+          "The agent can generate or edit pictures and add them to your media, and can first make a frame with people placed as described, then generate the video from it.",
+          "Setup can install the image generation models at the same time (about 16 GB), and existing installs can download them in the background from the launcher; the download pauses while a video is generating.",
+          "Online installs into a folder the system code page cannot spell, such as a Chinese folder on an English system, no longer fail at the kernel check.",
+          "On Linux, when the system compiler is newer than the installed GPU toolkit supports, setup now uses a compatible compiler instead of stopping while building the GPU attention component.",
+          "When a Windows security feature blocks files FreeVideo needs, the error card now says so and notes that the setting may need to be changed in Windows.",
+          "After a launcher error, an address or path being typed in the settings is no longer reset to its previous value.",
+          "When the agent makes a film, a shot that continues the previous one is at least 10 seconds long, 10 seconds by default; a length this computer cannot make in one run is reported before generation starts.",
+          "In AI Autopilot, the conversation list updates as soon as a job starts or stops, and switching conversations quickly stays on the one selected."
+        ]
+      },
+      "zh": {
+        "summary": "新增可选的图像生成模型，可以生成和修改图片，为角色卡生成多个角度，Agent 也能使用；并修复了几处安装和启动器的问题。",
+        "changes": [
+          "新增可选的图像生成模型。素材面板的“AI 生成”可以在空白画布上用一句话生成一张图；图片编辑器里的“改这张”可以修改当前图片，还可以再选最多两张素材图作参考。",
+          "装有图像生成模型时，角色卡先生成正面像，再以它为参考生成四分之三侧面、侧面、背面和脸部特写；场景卡也用它生成。",
+          "Agent 可以生成或修改图片并放进素材，也可以先按描述的人物站位生成一张首帧，再用它生成视频。",
+          "安装时可以选择同时安装图像生成模型（约 16 GB）；已经安装 FreeVideo 的，可以在启动器里下载，下载在后台进行，生成视频时自动暂停。",
+          "英文系统上在线安装到中文文件夹时，内核检查不再因为路径无法识别而失败。",
+          "Linux 上系统编译器比 GPU 工具包支持的版本更新时，安装会换用兼容的编译器，不再停在编译 GPU 注意力加速组件这一步。",
+          "Windows 的安全功能拦下运行所需的文件时，错误卡会说明原因，并提示可能需要在 Windows 中调整这项设置。",
+          "启动器出错后，设置里正在输入的地址或路径不再被换回原值。",
+          "Agent 拍片时，接上一镜的镜头每段至少 10 秒，没写长度时默认 10 秒；这台电脑一次生成不了的长度会在开始前说明。",
+          "“AI 全自动”里任务开始或停止后，对话列表立刻更新；快速切换对话时停在所选的那一段。"
+        ]
+      }
+    },
+    {
+      "product_version": "0.4.1",
+      "en": {
+        "summary": "Fixes Extend on videos made earlier, and improves progress display and several agent details.",
+        "changes": [
+          "Extend works again on videos made earlier, including ones whose size was changed, and the new part now uses the previous video's picture size automatically. Clicking Extend on a result or in Creations now opens Edit with the video on the timeline and a new part already placed after it, ready to generate.",
+          "Autopilot can start a new conversation, and earlier ones stay in a list to return to; the agent also keeps listening after it answers, so it still responds when the conversation resumes later.",
+          "A percentage and the time left appear as soon as a video starts; progress keeps moving while the model loads and runs smoothly to the end, on Autopilot job cards as well.",
+          "In Edit, an agent can start a new timeline from just a name, and writes a short note on each clip so it is clear at a glance what the clip is.",
+          "A video added to the timeline from Creations now brings the description it was generated from, so it can be regenerated right away.",
+          "A video of 16 to 29 seconds requested through an agent is now made in one generation when the computer allows it, the same as in Create.",
+          "When a specific camera path, placement or order of actions keeps coming out wrong, the agent can offer to make a rough camera draft first and generate from it.",
+          "The question about freeing the disk space used by old model files now appears after updating.",
+          "At smaller sizes, more of the model stays in GPU memory, so computers with less memory read less from the drive while generating.",
+          "When the network is slow or a step takes a while, the install page now shows what it is doing.",
+          "Third-party download during setup now lists only the files this computer needs, and the list can be exported; after downloading, choose the folder and the files that pass the check are used directly.",
+          "When other programs use a large part of the GPU during a generation, or the GPU overheats, a short note appears under the result."
+        ]
+      },
+      "zh": {
+        "summary": "修复了之前生成的视频不能“接着生成”的问题，并改进了进度显示和 Agent 的几处体验。",
+        "changes": [
+          "之前生成的视频（包括换过尺寸的）都可以“接着生成”，不再提示不能接续；新的一段会自动用上一段的画面大小。在结果或作品上点“接着生成”，会打开剪辑视图：原视频已在时间线上，后面接好了新的一段，点“生成”继续。",
+          "“AI 全自动”里可以开新对话，旧对话留在列表里，可以回去接着做；Agent 答完以后会一直等下一句，隔一会儿再说也有回应。",
+          "点“生成”后马上显示百分比和预计剩余时间；加载模型时进度照常前进，平稳走到结束，“AI 全自动”的任务卡也一样。",
+          "剪辑视图里，Agent 只凭一个名字就能新建时间线，并会在每一段上写一句说明，一眼就能看出这一段是什么。",
+          "从“作品”放上时间线的视频会带上当时的生成描述，可以直接重新生成。",
+          "通过 Agent 生成 16–29 秒的视频时，电脑条件允许就一次生成，和创作面板一致。",
+          "指定的镜头路线、位置或动作顺序总是生成得不对时，Agent 会提议先做一个粗略的镜头草稿，再照草稿生成。",
+          "更新后询问是否释放旧模型文件所占硬盘空间的提示，现在会正常出现。",
+          "画面较小时，更多模型留在显存里，内存较小的电脑生成时读取硬盘更少。",
+          "安装时网络较慢或某一步较久时，安装页会显示当前正在做什么。",
+          "安装时选第三方下载，现在只列出这台电脑需要的文件，并可以导出下载清单；下载完成后选中那个文件夹，校验通过的文件直接使用。",
+          "生成期间其他程序占用了较多显卡，或显卡过热时，结果下方会出现一句简短的提示。"
+        ]
+      }
+    },
+    {
+      "product_version": "0.4.0",
+      "en": {
+        "summary": "Adds an editing view, long videos generated one part after another, and AI agent connections, and makes generation faster.",
+        "changes": [
+          "New editing view: arrange generated clips on a timeline, add text and subtitles, change speed or reverse a clip, and choose the size and quality when exporting.",
+          "Long videos can be generated one part after another: select a range on the timeline in the editing view and press Generate, and each part continues from the one before. A 30-second video is generated in two parts.",
+          "Clips can be extended in the editing view: drag a new part out of the end of a clip and press Generate, and it continues from the clip. A \"First-frame reference\" switch reduces drift when a clip is extended.",
+          "The editing view can create subtitles automatically: it recognizes Chinese, English, Japanese, Korean and Cantonese speech and gives each line its text and timing.",
+          "A step-by-step guide appears the first time FreeVideo opens, and can be viewed again from Settings.",
+          "Connect an AI agent and let it generate, edit and export videos.",
+          "A new \"LAN access\" switch in Settings lets phones and other computers on the same network open FreeVideo with a link.",
+          "After an offline package is imported, FreeVideo offers to delete the ZIP files that are no longer needed, freeing up disk space.",
+          "LoRAs can be added directly in the creation panel.",
+          "The FreeVideo · Media node accepts several reference images.",
+          "Faster generation: the wait before decoding is shorter; when generating several videos in a row, the models load faster for the later ones. On computers with less memory, background compiling after an update uses less memory.",
+          "Fixes: generating with several large reference images no longer runs out of memory; 16:9 videos can be saved as share videos; making the full video from a preview no longer stalls on a single step now and then; when setup cannot find a graphics driver, the error says so; setup shows the current step; when security software removes one of FreeVideo's files, the error says why and how to restore it; on a slow network, setup waits longer and tries once more when no download source responds; on English Windows, FreeVideo starts when the install folder or the user name contains Chinese characters."
+        ]
+      },
+      "zh": {
+        "summary": "新增剪辑视图、一段接一段的长视频生成，并可以连接 AI Agent；生成也更快。",
+        "changes": [
+          "新增剪辑视图：把生成的片段排在时间线上剪辑，可以加文字和字幕、变速和倒放；导出时可以选画面大小和画质。",
+          "长视频可以一段接一段生成：在剪辑视图的时间线上选好范围再点生成，每一段都接着前一段往下生成；30 秒的视频分两段生成。",
+          "剪辑视图里可以延长片段：从片段尾巴拖出一段再点生成，接在原片段后面往下生成；延长片段时可以打开“首帧参考”，减小画面漂移。",
+          "剪辑视图可以自动生成字幕：识别中文、英文、日文、韩文和粤语语音，得到每句的文字和时间。",
+          "第一次打开时有分步指引，设置里可以再看一遍。",
+          "可以连接 AI Agent，让它生成、剪辑和导出视频。",
+          "设置里新增“局域网访问”开关，打开后，同一网络里的手机和其他电脑可以用链接打开 FreeVideo。",
+          "导入离线包以后，可以删掉用不到的压缩包，释放磁盘空间。",
+          "创作面板里可以直接添加 LoRA。",
+          "FreeVideo · Media 节点可以接多张参考图。",
+          "生成更快：解码前的等待更短；连续生成时，后面的视频加载模型更快。内存较小的电脑上，更新后的后台编译占用的内存更少。",
+          "修复：用多张较大的参考图生成时不再内存不足；16:9 的视频可以保存分享视频；先出预览再生成正式视频时，不再偶尔在某一步停留很久；安装时没有找到显卡驱动，会直接说明；安装时会显示当前步骤；FreeVideo 的文件被安全软件移走时，会说明原因和恢复的办法；网络较慢、下载源都连不上时，安装会多等一会儿再试一轮；英文 Windows 上，安装文件夹或用户名带中文时也能正常启动。"
+        ]
+      }
+    },
+    {
+      "product_version": "0.3.25",
+      "en": {
+        "summary": "Offline packages now work on Windows PCs where long-path support is off, and a generation interrupted once no longer slows down later ones.",
+        "changes": [
+          "On Windows PCs where long-path support is off, which is the Windows default, offline packages now import, start and generate normally with no change to system settings, including in deeply nested folders with very long paths. A folder left half imported by the previous version needs no cleanup: import the package again after updating.",
+          "The Total pixels list in the creation panel no longer offers 1.00 MP, which gave the same size as 0.98 MP · Native. Workflows saved at 1.00 MP open at their original size.",
+          "On Windows PCs whose RAM cannot hold the whole video model, the part of the model that comes from the drive is now read ahead while the rest is computing, so a slow drive holds up each sampling step much less.",
+          "On Windows, the first video at the Max quality level, or at some custom step counts, no longer downloads about 26 GB of extra model files.",
+          "A generation interrupted once no longer slows down later generations. The compatibility level is raised automatically only after two interruptions in a row or a graphics card error, and goes back down after three generations complete normally.",
+          "Closing FreeVideo during a generation now cancels it instead of counting as an interruption. While the compatibility level is raised automatically, the progress says so and shows how many more completed generations are needed before it speeds up.",
+          "The creation panel has a new Available sizes and lengths row under Frame & duration. It opens a map of the picture sizes and lengths that can be generated; hovering shows the estimated time, and clicking fills in the size and length."
+        ]
+      },
+      "zh": {
+        "summary": "离线包在没有开启长路径支持的 Windows 电脑上也能使用；生成被打断一次后，之后的生成不再变慢。",
+        "changes": [
+          "在没有开启长路径支持的 Windows 电脑上（Windows 的默认设置），离线包现在可以正常导入、启动和生成，不需要更改系统设置；层级很深、路径很长的文件夹也可以。上一版没有导完的文件夹不需要清理，更新后可以直接重新导入。",
+          "创作面板“总像素”的选项里去掉了“1.00 MP”，它和“0.98 MP · 原生”是同一个尺寸；以前用 1.00 MP 保存的工作流打开后尺寸不变。",
+          "内存不足以容纳整个视频模型的 Windows 电脑上，需要从硬盘读取的那部分模型现在会在其余部分计算的同时提前读好，硬盘较慢时每个采样步等待的时间明显缩短。",
+          "在 Windows 上第一次用“极致”档（以及部分自定义步数）生成时，不再额外下载约 26 GB 的模型文件。",
+          "生成被意外中断一次后，之后的生成不再因此变慢：只有连续两次中断或显卡报错，才会自动提高兼容档位；之后连续三次正常完成，档位会自动调回。",
+          "生成过程中关掉 FreeVideo，现在会取消这次生成，不算作中断；兼容档位被自动提高时，生成进度上会说明这一点，并显示再完成几次后会加快。",
+          "创作面板“画幅与时长”下面新增“可生成范围”：展开是一张图，显示可以生成的画面大小和时长；鼠标移到图上会显示预计用时，点击图中的位置会填入对应的大小和时长。"
+        ]
+      }
+    },
+    {
+      "product_version": "0.3.24",
+      "en": {
+        "summary": "Compiling after an update now runs in the background while FreeVideo is idle, and Windows PCs with less RAM and 8 GB RTX 30 cards generate faster; Repair handles more cases and offline installations update their engine with the launcher.",
+        "changes": [
+          "After an update, an installation, a repair or a graphics driver update, FreeVideo compiles in the background while it is idle, which takes two to three minutes, and the first video after that no longer waits for compiling; the background work stops as soon as a video starts.",
+          "Clearing the system's temporary files no longer slows the next video: compiled results are now kept in the FreeVideo folder.",
+          "On Windows PCs with less RAM, each step reads less from the drive, and the second pass of a two-pass video starts sooner; 8 GB RTX 30-series cards also run the second pass of full-size videos faster.",
+          "With prompt enhancement on, a rewrite starts 3–4 seconds sooner. The background preparation uses about 0.7 GiB of RAM and no GPU memory, and it stops when a video starts generating.",
+          "Repair also restores ComfyUI packages whose files were deleted or changed, and replaces model files that differ from the tested version, keeping the original under a new name. When the text encoder folder holds a same-named file of a different size, generation uses the tested one.",
+          "FreeVideo installed from an offline package now updates its engine with the launcher without downloading; an older launcher no longer overwrites a newer FreeVideo, and both versions are shown when they differ.",
+          "When a browser extension interferes with FreeVideo, the error card names the extension and lists ways to fix it.",
+          "View licenses in the license step lists each license you accept, and each one opens; in installations from an offline package the full texts open from this computer, without a connection.",
+          "Fixes: after an engine update, commands run with the engine's own Python use the new FreeVideo; on Linux, Install / repair completes when the uv tool in the installation folder is a link to another location."
+        ]
+      },
+      "zh": {
+        "summary": "更新后的编译改在空闲时于后台完成，内存较小的 Windows 电脑和 8 GB 的 RTX 30 显卡生成更快；“修复”能处理更多情况，离线安装也能随启动器更新引擎。",
+        "changes": [
+          "更新、安装、修复或更新显卡驱动后，FreeVideo 会在空闲时于后台完成编译，约两三分钟，之后的第一次生成不用再等编译；开始生成时后台编译会立即停止。",
+          "清理系统临时文件后，下一次生成不再变慢：编译结果改存在 FreeVideo 的目录里。",
+          "内存较小的 Windows 电脑上，生成时每一步从硬盘读取的数据更少，两遍生成的第二遍也开始得更快；8 GB 的 RTX 30 系列显卡上，全尺寸视频的第二遍更快。",
+          "开启提示词增强时，改写开始前少等 3–4 秒。为此 FreeVideo 会在后台提前做好准备，约占 0.7 GiB 内存，不占显存，开始生成视频时自动退出。",
+          "“修复”也会补回 ComfyUI 环境里被删除或改动的包，并把和测试版本不同的模型文件改名保留、换回测试过的版本。生成时如果文本编码器目录里有同名但大小不同的文件，会改用测试过的那份。",
+          "用离线整合包装的 FreeVideo 也会随启动器更新引擎，不用下载；旧启动器不再覆盖新版 FreeVideo，两者版本不同时会分别显示。",
+          "浏览器扩展干扰 FreeVideo 时，出错卡片会写出是哪个扩展，并给出解决办法。",
+          "许可确认里的“查看许可证”会列出要同意的每一项许可，每项都能打开；用离线整合包安装时打开的是本机全文，断网也能看。",
+          "修复：引擎更新后，用引擎自带 Python 运行的命令也会用新版 FreeVideo；Linux 上安装目录里的 uv 被换成链接时，“安装 / 修复”也能完成。"
+        ]
+      }
+    },
+    {
+      "product_version": "0.3.23",
+      "en": {
+        "summary": "Generation and installation progress show one overall percentage with the details that matter, such as the current step and how much has been downloaded; the workspace fills the window; RTX 50 GPUs no longer keep pausing when the driver cache is full, and the first video after a start waits less.",
+        "changes": [
+          "The first video after FreeVideo starts waits up to about 15 seconds less for the text encoder. On RTX 40 and RTX 50 cards under Windows, and on Linux, more of the video decoder stays on the graphics card while decoding (all of it on 12 GB cards), so decoding is faster.",
+          "On Windows with RTX 50 GPUs, generation no longer keeps pausing once the graphics driver's compile cache is full.",
+          "On Windows, when the video model fits neither in GPU memory nor in RAM, generation waits less for the drive. When another program takes GPU memory during generation, decoding no longer starts over because it ran out of memory.",
+          "Generation progress shows one overall percentage, the current step and the elapsed time, with a small bar under slow stages, and the remaining time appears after the first two steps; during installation, repair and updates, a download shows what is being downloaded, how much and how fast. Loading the video model no longer hangs when the graphics driver does not answer, and after a long time without progress the page says that generation is still running and offers the report.",
+          "Error cards now say in one sentence what happened and what to do, with the raw error under Technical details; cases such as a reference video that is too short or a LoRA that cannot be used with the int8 model yet each have their own message. The compatibility setting now describes what each level does.",
+          "The creative workspace and the Creations window now fill the browser window, so the video preview grows with it. On windows at least 1680 px wide, a Recent videos column appears on the right; clicking a video plays it in the preview, and a button in the preview header hides the column.",
+          "A custom step count now downloads only a sampling table the first time, up to 1.2 GB, instead of 26 GB of model weights. Any download still needed, as for some LoRAs on FP8, shows its progress, size and speed instead of an unchanging “Loading model”.",
+          "On NVIDIA graphics cards with 8 GB or more, prompt enhancement needs about 4 GiB of free RAM instead of 11 GiB, and on 8 GB and 10 GB cards a rewrite takes tens of seconds instead of several minutes. While it runs, the status line shows how long it has taken.",
+          "Each saved video now takes far less disk space, about 40 MB instead of about 790 MB for a 10-second 1344 × 768 video, because the uncompressed video and audio are no longer kept. The first start after updating deletes them from earlier videos as well, and previews can still continue with Run second pass.",
+          "A new Repair button in the launcher fixes an installation in one step and keeps models and videos; it appears on the error card when the launcher finds a problem it can repair, and in Settings › Environment. A repair that only adds a few packages no longer asks for as much free disk space as a new installation.",
+          "On a Mac, when unified memory runs short, the second pass switches to a computation that uses less memory; if it still runs short, the first pass is kept and only the second pass runs again. When less memory is available than a video needs, FreeVideo says so as soon as generation starts.",
+          "Fixes: on Linux, desktops without xdg-open can open FreeVideo in the browser, and the background service starts when the folder name contains %, $, quotes or backslashes; when port 8188 is in use, the launcher starts ComfyUI on a free port and shows the new address; and Captions only in the image editor no longer leaves white specks when it sweeps a caption in several strokes. With a self-installed ComfyUI updated to a recent version, each video appears once in Assets instead of twice, and paths with hidden folders no longer show <PATH><PATH> in the launcher terminal and diagnostic reports."
+        ]
+      },
+      "zh": {
+        "summary": "生成和安装的进度只显示一个总百分比，并给出在做什么、下了多少等必要的细节；创作面板铺满整个窗口；RTX 50 显卡不再因驱动缓存写满而反复停顿，启动后的第一个视频等待更短。",
+        "changes": [
+          "启动后的第一个视频等文本编码器的时间更短，最多少等约 15 秒。在 Windows 上的 RTX 40、RTX 50 显卡以及 Linux 上，解码时更多的解码器留在显卡上（12 GB 显卡可以全部留下），解码更快。",
+          "在使用 RTX 50 系显卡的 Windows 电脑上，显卡驱动的编译缓存写满后，生成时不再反复停顿。",
+          "在 Windows 上，显存和内存都放不下整个视频模型时，生成时等硬盘的时间更短。生成期间其他程序占用了显存时，解码不再因显存不足而从头再来一遍。",
+          "生成进度只显示一个总百分比、正在做的那一步和已用时间，慢的阶段下面多一条小进度条，跑完两步后再显示预计剩余时间；安装、修复和更新时，下载会写明在下什么、下了多少和速度。加载视频模型时不再因显卡驱动没有响应而一直卡住；长时间没有新的进度时，页面会说明生成仍在进行，并可以下载报告。",
+          "出错时，卡片用一句话说明发生了什么、该怎么做，原始报错收进“技术详情”；参考视频太短、LoRA 暂时不能用于 int8 模型等情况各有自己的说明。兼容性设置也改成说明每一档的效果。",
+          "创作面板和作品窗口现在铺满浏览器窗口，视频预览随窗口一起变大。窗口宽 1680 像素以上时，右侧会多出“最近作品”一栏，点击其中的视频会在预览中播放，预览标题行的按钮可以收起这一栏。",
+          "选用自定义步数时，第一次只需下载一个采样表（最多 1.2 GB），不再先下载 26 GB 的模型权重。仍需下载时（例如 FP8 上的部分 LoRA），会显示进度、大小和速度，不再一直停在“加载模型”。",
+          "在 8 GB 及以上的 NVIDIA 显卡上，提示词增强只需约 4 GiB 可用内存（原来要 11 GiB），8 GB 和 10 GB 显卡上的改写从几分钟缩短到几十秒。改写时，状态栏会显示已用时间。",
+          "保存的视频占用的磁盘空间大幅减少：10 秒、1344 × 768 的视频从约 790 MB 降到约 40 MB，因为不再保留未压缩的画面和音频。更新后第一次启动时，也会删除之前视频里的这些文件；预览仍然可以点“继续二采”。",
+          "启动器新增“修复”按钮，一步修好安装，模型和视频都会保留；发现可以修复的问题时，出错卡片上会出现这个按钮，“设置 → 环境”里也有。只需补装几个包的修复，不再要求和全新安装一样多的空闲磁盘空间。",
+          "在 Mac 上，统一内存不足时，第二遍会改用占用内存更少的计算方式；仍然不足时，保留第一遍的结果，只重新运行第二遍。可用内存低于所需时，生成开始时就会给出提示。",
+          "修复：Linux 上，没有 xdg-open 的桌面也能在浏览器中打开 FreeVideo，文件夹名带 %、$、引号或反斜杠时后台服务也能启动；本机 8188 端口被占用时，启动器会改用空闲端口并说明新地址；图片编辑器的“只去字幕”分几笔扫过字幕时不再留下白点。自行将 ComfyUI 更新到较新版本后，每个视频在“资产”中不再出现两条记录；启动器终端和诊断报告里，隐去文件夹的路径不再显示为 <PATH><PATH>。"
+        ]
+      }
+    },
+    {
+      "product_version": "0.3.22",
+      "en": {
+        "summary": "The image editor opens again after installing or updating with the launcher.",
+        "changes": [
+          "The image editor opens again. In 0.3.21 installed or updated with the launcher, clicking Edit only showed \"The image could not be opened for editing.\" because the fonts the editor uses were missing from the package."
+        ]
+      },
+      "zh": {
+        "summary": "通过启动器安装或更新后，图片编辑器可以正常打开了。",
+        "changes": [
+          "图片编辑器可以正常打开了。通过启动器安装或更新的 0.3.21 缺少编辑器用的字体，点“编辑”只会提示“这张图片无法打开编辑。”。"
+        ]
+      }
+    }
+  ]
+}

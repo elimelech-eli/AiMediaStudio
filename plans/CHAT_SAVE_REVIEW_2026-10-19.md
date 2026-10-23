@@ -1,0 +1,9 @@
+# New-chat Save responsiveness
+
+Reported symptom: clicking Save after naming a conversation appeared to hang the application. Saved logs contain aborted connections at `/api/chats/action`; they do not establish why the client stopped waiting. The backend was stopped when investigation began. After starting it, the original Save interaction completed in approximately 1.3 seconds in an isolated Electron window. The original stall was not reproduced.
+
+Found and removed a responsiveness dependency: `newItem` waited for `/api/tree`, which scans/publishes all projects, before opening an already saved conversation. The new flow inserts the returned chat locally, opens it first, and refreshes the project tree afterward. It displays Saving / Opening / Ready states, prevents concurrent new-chat dialogs/submissions, and bounds the save request including JSON reading to 15 seconds. A timeout explicitly warns that the server may have saved the chat and advises checking Chats before retrying. There is no automatic retry or deletion of existing chats.
+
+Verification: JavaScript syntax check passed; six project/conversation tests passed. `maintenance/check-chat-save.cjs` exercises the actual modal submit in a disposable project with startup inference disabled. With tree requests delayed five seconds, Save opened the named chat in 1.19 seconds. A deliberately stalled save produced the expected timeout notice. No renderer errors were reported. Evidence: `maintenance/chat-save-check.json`. Only test-owned projects were removed; user assets/history were preserved. No GPU generation or worker interruption was needed. Client JavaScript is served without cache; refresh/reopen loads the changes.
+
+Remaining uncertainty: these changes eliminate the all-project refresh dependency and silent indefinite save wait, but do not prove the cause of the earlier aborted connections. If it recurs, the new visible save/opening status narrows where it stalls.

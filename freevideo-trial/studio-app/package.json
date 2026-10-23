@@ -1,0 +1,7 @@
+{
+  "name": "freevideo-studio-desktop",
+  "productName": "FreeVideo Studio",
+  "version": "1.0.0",
+  "private": true,
+  "main": "main.cjs"
+}

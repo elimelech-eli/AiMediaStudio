@@ -1,0 +1,9 @@
+# Collection and Trash deletion
+
+Each collection has an ellipsis/context menu with Delete all. Normal collections delete all items of that type in that project to Trash; failed generation records are hidden. Active generations are excluded from collection-wide deletion. Trash collections permanently delete their contents. Search does not narrow these operations: confirmation states the full scope and count.
+
+Trash has a Delete all footer button covering trashed assets/chats and deleted projects across the tree, including items hidden by search. Confirmation names this scope and states that deletion cannot be undone. Existing backend active-job, archive and snapshot-reference protections remain in force. Failures are reported individually; partial completion is counted rather than reported as total success.
+
+Delete on a selected item now consistently uses the entire selection, including Trash's permanent-delete action and failed-record menus. The Delete key works in Trash too. Successful items leave the selection; failures stay selected. The current work view closes only when its item was successfully removed. Entering/exiting Trash clears selection to avoid mixing live and trashed items.
+
+Validation: six focused Node tests cover mixed selections, permanent selection deletion, failed records, every collection kind, global Trash scope, cancellation and partial failures. Native Electron checks exercised actual tree selection/context menus for two chats: Delete both, permanently delete both, collection Delete all, collection permanent Delete all, and cancellation of the global Trash confirmation. All passed with no renderer errors. Evidence: maintenance/tree-delete-check.json. Only disposable test chats/projects were changed. Client-only changes need a refresh, no backend restart.
